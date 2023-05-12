@@ -38,14 +38,21 @@ class Program
         //    "clappathon"
         //);
         IHospitalProvider jsonProvider = new TestObjectForJsonProvider();
+        DateTime timestamp = DateTime.Now;
+
         //create a json file name for specific time
-        IJsonProcessor jsonProcessor = new FileJsonProcessor("data/stamp_" + DateTime.Now.ToString("yyyy.MM.dd_HH_mm_ss") + ".json");
+        IJsonProcessor jsonProcessor = new FileJsonProcessor("data/stamp_" + timestamp.ToString("yyyy.MM.dd_HH.mm.ss") + ".json");
         //from object Root create a txt format of json
         ConverterJson converterJson = new ConverterJson();
         //find an error in json 
         try
         {
+            Console.WriteLine("Process {0}...", timestamp.ToString("yyyy.MM.dd_HH.mm.ss"));
+
             jsonProcessor.ProcessJson(converterJson.Convert(jsonProvider.GetHospital()));
+
+            Console.WriteLine("OK. Enter 'Exit' for Stop ");
+            
         }
         //process this error in block catch  
         catch (Exception ex) 
