@@ -9,6 +9,6 @@ namespace DraegerJson
 {
     public interface IHospitalProvider
     {
-        public Hospital GetHospital();
+        public Hospital? GetHospital();
     }
 }

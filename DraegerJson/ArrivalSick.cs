@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DraegerJson
 {
-    public class Patient
+    public class ArrivalSick
     {
         public int Id { get; set; }
         public Procedure Procedure { get; set; }

@@ -24,6 +24,7 @@ class Program
         timer.AutoReset = true;
         timer.Enabled = true;
     }
+    private static IHospitalProvider? hospitalProvider = null;
 
     //Buildjson function is called every minute
     private static void BuildJson(object? source, ElapsedEventArgs e)  
@@ -37,7 +38,15 @@ class Program
         //    "CLTDEMOCLAPP01",
         //    "clappathon"
         //);
-        IHospitalProvider jsonProvider = new TestObjectForJsonProvider();
+        if (hospitalProvider == null) 
+            hospitalProvider =new DraegerHospitalProvider(
+                "C:\\DraegerApp\\DraegerSystem\\DraegerConsole\\certificate\\92e4a881-3157-4581-8926-69d54e44db6a.pfx",
+                "434afeea-c27f-42b9-a10d-e5fe8e69131b",
+                "Clapp1",
+                "SRVDEMOICM05V.DRAEGER.DEMO.CH",
+                25000,
+                "clappathon"
+            );
         DateTime timestamp = DateTime.Now;
 
         //create a json file name for specific time
@@ -48,11 +57,12 @@ class Program
         try
         {
             Console.WriteLine("Process {0}...", timestamp.ToString("yyyy.MM.dd_HH.mm.ss"));
-
-            jsonProcessor.ProcessJson(converterJson.Convert(jsonProvider.GetHospital()));
-
+            Hospital? hospital = hospitalProvider!.GetHospital();
+            if(hospital != null )
+            {
+                jsonProcessor.ProcessJson(converterJson.Convert(hospital));
+            }
             Console.WriteLine("OK. Enter 'Exit' for Stop ");
-            
         }
         //process this error in block catch  
         catch (Exception ex) 
@@ -69,44 +79,26 @@ class Program
     static int Main(string[] args)
     {
         // CLAPP-Verbindungskonfiguration erstellen
-        //CLAPPConfiguration config = new CLAPPConfiguration()
-        //{
-        //    Certificate = "361609fb-09a8-47c8-9bc3-d2b4db36eb2d.pfx", // Zertifikat: Zertifikatname (Windows Certificate Store) oder Pfad zur Zertifikatdatei (PFX)
-        //    CertificateFilePassword = "fb6b456b-641f-4a3f-b31b-938ec2149824".ToSecureString(), // Passwort zum Öffnen des PFX
-        //    CLAPPID = "CLAPP1", // CLAPP ID
-        //    DomainID = "clappathon", // Domain ID
-        //    ServerHostname = "SRVDEMOICM05V.DRAEGER.DEMO.CH",
-        //    ServerPort = 25000
-        //   
-        //    //    "361609fb-09a8-47c8-9bc3-d2b4db36eb2d.pfx",
-        //    //    "fb6b456b-641f-4a3f-b31b-938ec2149824",
-        //    //    "CLAPP1",
-        //    //    "clappathon",
-        //    
-        //    //Client name – CLTDEMOCLAPP01
-        //    //DSI name – clappathon
-        //    
-        //};
-        //try
-        //{
-        //    // CLAPP-Objekt erstellen / Verbindung aufbauen
-        //    using (CLAPP clapp = new CLAPP(config))
-        //    {
-        //        PatientsList pList = clapp.GetPatientsList(); // Liste der Patienten auslesen
-        //        foreach (Patient p in pList.PatientList) // Über alle Patienten iterieren
-        //        {
-        //            clapp.SetPatient(p.CaseID); // Patienten selektieren
-        //            PatientDemographics pd = clapp.GetPatientDemographics(p.CaseID); // Demografische Daten des Patienten auslesen
-        //            Console.WriteLine("Patient's Name:\t{0}", pd.PatientName); // Patientennamen ausgeben
-        //            clapp.ReleasePatient(); // Patienten deselektieren
-        //        }
-        //    } // Ende von using-Block: Automatisches CLAPP.Dispose()
-        //}
-        //catch (Exception e)
-        //{
-        //    Console.WriteLine("Exception:\t{0}", e.ToString());
-        //}
-        //
+        CLAPPConfiguration config = new CLAPPConfiguration()
+        {
+            Certificate = "C:\\DraegerApp\\DraegerSystem\\DraegerConsole\\certificate\\92e4a881-3157-4581-8926-69d54e44db6a.pfx", // Zertifikat: Zertifikatname (Windows Certificate Store) oder Pfad zur Zertifikatdatei (PFX)
+            CertificateFilePassword = "434afeea-c27f-42b9-a10d-e5fe8e69131b".ToSecureString(), // Passwort zum Öffnen des PFX
+            CLAPPID = "Clapp1", // CLAPP ID
+            DomainID = "clappathon", // Domain ID
+            ServerHostname = "SRVDEMOICM05V.DRAEGER.DEMO.CH",
+            ServerPort = 25000
+           
+            //    "361609fb-09a8-47c8-9bc3-d2b4db36eb2d.pfx",
+            //    "fb6b456b-641f-4a3f-b31b-938ec2149824",
+            //    "CLAPP1",
+            //    "clappathon",
+            
+            //Client name – CLTDEMOCLAPP01
+            //DSI name – clappathon
+            
+        };
+      
+        
         SetTimer();
         Console.WriteLine("Application started at "+ DateTime.Now);
         //enter exit for stop 
@@ -124,7 +116,7 @@ class Program
         { 
             timer.Stop();
             timer.Dispose();
-
+        
         }
        
         return 0;

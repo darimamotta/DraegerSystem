@@ -8,6 +8,6 @@ namespace DraegerJson
 {
     public class Hospital
     {
-        public List<Patient> Patients { get; set; } = new List<Patient>();
+        public List<ArrivalSick> Patients { get; set; } = new List<ArrivalSick>();
     }
 }
