@@ -89,7 +89,6 @@ namespace DraegerJson
         private string domainId;
         private int serverPort;
         private string template;
-        //= "[Orders:Records=First; Range=All; ExternalIDType=SNOMED; ExternalID=363788007; Format=!({Begin})~];";
 
         private string CreateTemplate()
         {
