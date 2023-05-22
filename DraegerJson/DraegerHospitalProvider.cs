@@ -30,6 +30,7 @@ namespace DraegerJson
             this.serverHostName = serverHostName;
             this.domainId = domainId;
             this.serverPort = serverPort;
+            template = CreateTemplate();
         }
         public CLAPPConfiguration CreateConfig()
         {
@@ -87,8 +88,24 @@ namespace DraegerJson
         private string serverHostName;
         private string domainId;
         private int serverPort;
-        private string template = "[Orders:Records=First; Range=All; ExternalIDType=SNOMED; ExternalID=363788007; Format=!({Begin})~]; [Orders:Records=First; Range=All; ExternalIDType=SNOMED; ExternalID=441765008; Format=!({Begin})~]; [Orders:Records=First; Range=All; ExternalIDType=SNOMED; ExternalID=419126006; Format=!({Begin})~]";
+        private string template;
 
+        private string CreateTemplate()
+        {
+            List<string> snomedID = new List<string>()
+            {
+                "363788007","419126006","441765008","442335003","442272006","442385007","442126001","442371002",
+                "442137000","442273001","398164008","441969007","397927004","442431006"
+            };
+            string t = "";
 
+            foreach (var id in snomedID) 
+            {
+                t += $"[Orders:Records=First; Range=All; ExternalIDType=SNOMED; ExternalID={id}; Format=!({{Begin}})~];";
+            }
+            t += "[PreOP: Format=!({OP_ID})]";
+            return t;
+
+        }
     }
 }
