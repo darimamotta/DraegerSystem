@@ -76,7 +76,7 @@ namespace DraegerJson
         {
             clapp.SetPatient(p.CaseID);
             var pt = clapp.ParseTemplate(p.CaseID, template, new DateTime(1990,1,1),DateTime.Now);
-            Console.WriteLine(pt);
+            Console.WriteLine(pt.TextResult);
             clapp.ReleasePatient();
             return new ArrivalSick();
         }
@@ -87,7 +87,7 @@ namespace DraegerJson
         private string serverHostName;
         private string domainId;
         private int serverPort;
-        private string template = "[Orders:Records=First; Range=All; ExternalIDType=SNOMED; ExternalID=363788007; Format=!({Begin})~];";
+        private string template = "[Orders:Records=First; Range=All; ExternalIDType=SNOMED; ExternalID=363788007; Format=!({Begin})~]; [Orders:Records=First; Range=All; ExternalIDType=SNOMED; ExternalID=441765008; Format=!({Begin})~]; [Orders:Records=First; Range=All; ExternalIDType=SNOMED; ExternalID=419126006; Format=!({Begin})~]";
 
 
     }

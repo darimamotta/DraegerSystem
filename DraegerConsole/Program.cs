@@ -40,7 +40,7 @@ class Program
         //);
         if (hospitalProvider == null) 
             hospitalProvider =new DraegerHospitalProvider(
-                "C:\\DraegerApp\\DraegerSystem\\DraegerConsole\\certificate\\92e4a881-3157-4581-8926-69d54e44db6a.pfx",
+                "C:\\createdcertificates\\92e4a881-3157-4581-8926-69d54e44db6a.pfx",
                 "434afeea-c27f-42b9-a10d-e5fe8e69131b",
                 "Clapp1",
                 "SRVDEMOICM05V.DRAEGER.DEMO.CH",
