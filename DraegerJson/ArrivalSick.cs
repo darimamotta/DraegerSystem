@@ -9,7 +9,7 @@ namespace DraegerJson
     public class ArrivalSick
     {
         public int Id { get; set; }
-        public Procedure Procedure { get; set; }
-        public List<Parameter> Params { get; set; } = new List<Parameter>();
+        public List <Procedure> Procedures { get; set; } = new List<Procedure>();
+        
     }
 }

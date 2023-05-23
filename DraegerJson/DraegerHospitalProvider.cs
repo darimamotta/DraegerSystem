@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -85,7 +86,7 @@ namespace DraegerJson
             ArrivalSick patient = new ArrivalSick();
             foreach (var snomedID in snomedIDs)
             {
-                string template = CreateTemplate(snomedID.Id);
+                string template = CreateParamsTemplate(snomedID.Id);
                 var pt = clapp.ParseTemplate(
                     p.CaseID,
                     template,
@@ -110,7 +111,11 @@ namespace DraegerJson
 
         private void BuildPatientFromTemplate(ArrivalSick patient, ParseTemplate pt, SnomedParameter param)
         {
-            var tokens = pt.TextResult.Split(';');
+            var tokens = pt.TextResult.Split(';', StringSplitOptions.RemoveEmptyEntries);
+            if (tokens.Length == 0) 
+            {
+                return;
+            }
             patient.Procedure = new Procedure
             {
                 Id = tokens.Last()
@@ -154,7 +159,7 @@ namespace DraegerJson
             new SnomedParameter { Id = "442431006", Name = "Ausfahrt Aufwachraum" }
         };
 
-        private string CreateTemplate( string snomedID)
+        private string CreateParamsTemplate( string snomedID)
         {
             string t = 
                 $"[Orders:Records=First; " +
@@ -163,9 +168,12 @@ namespace DraegerJson
                 $"ExternalID={snomedID}; " +
                 $"Format=!({{Begin}})~];";
             
-            t += "[PreOP: Format=!({OP_ID})]";
             return t;
 
+        }
+        private string CreateProcedureTemplate ()
+        {
+            return "[PreOP: Format=!({OP_ID})]";
         }
     }
 }

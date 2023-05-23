@@ -11,5 +11,6 @@ namespace DraegerJson
         public string ResourceType { get; set; } = "Procedure";
         public string Id { get; set; } = "";
         public string Status { get; set; } = "";
+        public List<Parameter> Params { get; set; } = new List<Parameter>();
     }
 }
