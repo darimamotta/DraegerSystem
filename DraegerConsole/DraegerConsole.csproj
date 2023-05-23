@@ -29,5 +29,6 @@
 	  <PackageReference Include="Draeger.Pdms.Services.Extensions" Version="1.0.1" />
 	  <PackageReference Include="Draeger.Pdms.Services.Json" Version="5.0.1" />
 	  <PackageReference Include="Draeger.Pdms.Services.Logging.Core" Version="1.0.1" />
+	  <PackageReference Include="Hl7.Fhir.R4" Version="5.1.0" />
 	</ItemGroup>
 </Project>
