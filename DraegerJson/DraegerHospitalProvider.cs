@@ -11,6 +11,11 @@ using System.Threading.Tasks;
 
 namespace DraegerJson
 {
+    public struct SnomedParameter
+    {
+        public string Id;
+        public string Name;
+    }
     //релизует интерфейс IObjectforJsonprovider
     public class DraegerHospitalProvider : IHospitalProvider
     {
@@ -30,7 +35,7 @@ namespace DraegerJson
             this.serverHostName = serverHostName;
             this.domainId = domainId;
             this.serverPort = serverPort;
-            template = CreateTemplate();
+            
         }
         public CLAPPConfiguration CreateConfig()
         {
@@ -67,25 +72,31 @@ namespace DraegerJson
                 PatientsList pList = clapp.GetPatientsList(); 
                 foreach (var p in pList.PatientList) 
                 {
-                    ArrivalSick? patient = BuildPatient(clapp, p);
-                    if (patient !=null) 
-                        hospital.Patients.Add(patient);
+                    ArrivalSick patient = BuildPatient(clapp, p);
+                    hospital.Patients.Add(patient);
                 }
             } 
             return hospital;
         }
 
-        private ArrivalSick? BuildPatient(CLAPP clapp, Patient p)
+        private ArrivalSick BuildPatient(CLAPP clapp, Patient p)
         {
             clapp.SetPatient(p.CaseID);
-            var pt = clapp.ParseTemplate(
-                p.CaseID, 
-                template, 
-                new DateTime(1990,1,1),
-                DateTime.Now
-            );
-            ArrivalSick? patient = BuildPatientFromTemplate(pt);
-            TEMPORARY_writeResultToFile(pt);
+            ArrivalSick patient = new ArrivalSick();
+            foreach (var snomedID in snomedIDs)
+            {
+                string template = CreateTemplate(snomedID.Id);
+                var pt = clapp.ParseTemplate(
+                    p.CaseID,
+                    template,
+                    new DateTime(1990, 1, 1),
+                    DateTime.Now
+                );
+                BuildPatientFromTemplate(patient, pt, snomedID);
+                TEMPORARY_writeResultToFile(pt);
+
+            }
+            
             clapp.ReleasePatient();
             return patient;
         }
@@ -97,10 +108,27 @@ namespace DraegerJson
             File.AppendAllText("result.txt", pt.TextResult);
         }
 
-        private ArrivalSick? BuildPatientFromTemplate(ParseTemplate pt)
+        private void BuildPatientFromTemplate(ArrivalSick patient, ParseTemplate pt, SnomedParameter param)
         {
-            return null;
+            var tokens = pt.TextResult.Split(';');
+            patient.Procedure = new Procedure
+            {
+                Id = tokens.Last()
+            };
+            for (int i = 0; i < tokens.Length-1; i++) 
+            {
+                patient.Params.Add(
+                    new Parameter
+                    {
+                        Id = param.Id,
+                        Name = param.Name,
+                        Date = DateTime.Parse(tokens[i])
+                    }
+                ); 
+            }
+          
         }
+
 
         private string certificate;
         private string certificateFilePassword;
@@ -108,21 +136,33 @@ namespace DraegerJson
         private string serverHostName;
         private string domainId;
         private int serverPort;
-        private string template;
-
-        private string CreateTemplate()
+        private static List <SnomedParameter> snomedIDs = new List<SnomedParameter>()
         {
-            List<string> snomedID = new List<string>()
-            {
-                "363788007","419126006","441765008","442335003","442272006","442385007","442126001","442371002",
-                "442137000","442273001","398164008","441969007","397927004","442431006"
-            };
-            string t = "";
+            new SnomedParameter { Id = "363788007", Name = "Eintritt erfolgt" },
+            new SnomedParameter { Id = "419126006", Name = "Beginn Anästhesiebetreuung" },
+            new SnomedParameter { Id = "441765008", Name = "Beginn Einleitung" },
+            new SnomedParameter { Id = "442335003", Name = "Ende Einleitung, Freigabe" },
+            new SnomedParameter { Id = "442272006", Name = "Beginn op. Vorb.(Lagerung) nichtärztl." },
+            new SnomedParameter { Id = "442385007", Name = "Saaleinfahrt" },
+            new SnomedParameter { Id = "442126001", Name = "Beginn op. Vorb. (Desinfektion) ärztl" },
+            new SnomedParameter { Id = "442371002", Name = "Beginn Hautschnitt (Schnitt)" },
+            new SnomedParameter { Id = "442137000", Name = "Ende Hautnaht (Naht)" },
+            new SnomedParameter { Id = "442273001", Name = "Ende op. Nachbereit." },
+            new SnomedParameter { Id = "398164008", Name = "Ende Ausleitung" },
+            new SnomedParameter { Id = "441969007", Name = "Saalausfahrt" },
+            new SnomedParameter { Id = "397927004", Name = "Ende Anästhesiebetreuung" },
+            new SnomedParameter { Id = "442431006", Name = "Ausfahrt Aufwachraum" }
+        };
 
-            foreach (var id in snomedID) 
-            {
-                t += $"[Orders:Records=First; Range=All; ExternalIDType=SNOMED; ExternalID={id}; Format=!({{Begin}})~];";
-            }
+        private string CreateTemplate( string snomedID)
+        {
+            string t = 
+                $"[Orders:Records=First; " +
+                $"Range=All; " +
+                $"ExternalIDType=SNOMED; " +
+                $"ExternalID={snomedID}; " +
+                $"Format=!({{Begin}})~];";
+            
             t += "[PreOP: Format=!({OP_ID})]";
             return t;
 

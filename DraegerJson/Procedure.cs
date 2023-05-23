@@ -8,7 +8,7 @@ namespace DraegerJson
 {
     public class Procedure
     {
-        public string ResourceType { get; set; } = "";
+        public string ResourceType { get; set; } = "Procedure";
         public string Id { get; set; } = "";
         public string Status { get; set; } = "";
     }
