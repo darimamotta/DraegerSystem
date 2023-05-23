@@ -67,19 +67,39 @@ namespace DraegerJson
                 PatientsList pList = clapp.GetPatientsList(); 
                 foreach (var p in pList.PatientList) 
                 {
-                    hospital.Patients.Add(BuildPatient(clapp, p));
+                    ArrivalSick? patient = BuildPatient(clapp, p);
+                    if (patient !=null) 
+                        hospital.Patients.Add(patient);
                 }
             } 
             return hospital;
         }
 
-        private ArrivalSick BuildPatient(CLAPP clapp, Patient p)
+        private ArrivalSick? BuildPatient(CLAPP clapp, Patient p)
         {
             clapp.SetPatient(p.CaseID);
-            var pt = clapp.ParseTemplate(p.CaseID, template, new DateTime(1990,1,1),DateTime.Now);
-            Console.WriteLine(pt.TextResult);
+            var pt = clapp.ParseTemplate(
+                p.CaseID, 
+                template, 
+                new DateTime(1990,1,1),
+                DateTime.Now
+            );
+            ArrivalSick? patient = BuildPatientFromTemplate(pt);
+            TEMPORARY_writeResultToFile(pt);
             clapp.ReleasePatient();
-            return new ArrivalSick();
+            return patient;
+        }
+
+        private void TEMPORARY_writeResultToFile(ParseTemplate pt)
+        {
+            if (File.Exists("result.txt"))
+                return;
+            File.AppendAllText("result.txt", pt.TextResult);
+        }
+
+        private ArrivalSick? BuildPatientFromTemplate(ParseTemplate pt)
+        {
+            return null;
         }
 
         private string certificate;
