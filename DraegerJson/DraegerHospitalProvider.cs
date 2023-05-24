@@ -112,13 +112,9 @@ namespace DraegerJson
                    DateTime.Now
                );
             Procedure proc = new Procedure();
-            var tokens = pt.TextResult.Split(';', StringSplitOptions.RemoveEmptyEntries);
-            if (tokens.Length != 0)
-            {
-                proc.Id = tokens[0];
-                patient.Procedures.Add(proc);   
-            }
-        
+            proc.Id = pt.TextResult;
+            patient.Procedures.Add(proc);   
+               
             return proc;
         }
 

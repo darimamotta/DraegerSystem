@@ -20,7 +20,7 @@ namespace DraegerConsole
             procedure1.Id = "OPERATION_123";
             procedure1.Status = "completed";
 
-            patient1.Procedure = procedure1;
+            patient1.Procedures.Add(procedure1);
 
             Parameter parameter1 = new Parameter();
             parameter1.Id = "442385007";
@@ -32,8 +32,8 @@ namespace DraegerConsole
             parameter2.Name = "Start time for preparation of patient in procedure room";
             parameter2.Date = new DateTime(2023, 7, 11);
 
-            patient1.Params.Add(parameter1);
-            patient1.Params.Add(parameter2);
+            procedure1.Params.Add(parameter1);
+            procedure1.Params.Add(parameter2);
 
             ArrivalSick patient2 = new ArrivalSick();
             patient2.Id = 2;
@@ -43,14 +43,14 @@ namespace DraegerConsole
             procedure2.Id = "OPERATION_123_1";
             procedure2.Status = "completed";
 
-            patient2.Procedure = procedure2;
+            patient2.Procedures.Add(procedure2);
 
             Parameter parameter3 = new Parameter();
             parameter3.Id = "442273001";
             parameter3.Name = "Time procedure room ready for next case";
             parameter3.Date = new DateTime(2023, 6, 17);
 
-            patient2.Params.Add(parameter3);
+            procedure2.Params.Add(parameter3);
 
             Hospital hospital = new Hospital();
             hospital.Patients.Add(patient1);
