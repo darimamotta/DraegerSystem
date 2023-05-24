@@ -15,7 +15,7 @@ namespace DraegerConsole
             ArrivalSick patient1 = new ArrivalSick();
             patient1.Id = 1;
             
-            Procedure procedure1 = new Procedure();
+            Operation procedure1 = new Operation();
             procedure1.ResourceType = "Procedure";
             procedure1.Id = "OPERATION_123";
             procedure1.Status = "completed";
@@ -38,7 +38,7 @@ namespace DraegerConsole
             ArrivalSick patient2 = new ArrivalSick();
             patient2.Id = 2;
 
-            Procedure procedure2 = new Procedure();
+            Operation procedure2 = new Operation();
             procedure2.ResourceType = "Procedure";
             procedure2.Id = "OPERATION_123_1";
             procedure2.Status = "completed";

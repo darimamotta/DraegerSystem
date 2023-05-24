@@ -9,5 +9,7 @@ namespace DraegerJson
     public class Hospital
     {
         public List<ArrivalSick> Patients { get; set; } = new List<ArrivalSick>();
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
     }
 }

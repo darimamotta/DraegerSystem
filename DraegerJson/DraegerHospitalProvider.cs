@@ -83,7 +83,7 @@ namespace DraegerJson
         private ArrivalSick BuildPatient(CLAPP clapp, Patient p)
         {
             clapp.SetPatient(p.CaseID);
-            ArrivalSick patient = new ArrivalSick();
+            ArrivalSick patient = new ArrivalSick { Id = p.CaseID };
             var proc = BuildProcedure(patient, clapp, p);
             foreach (var snomedID in snomedIDs)
             {
@@ -103,7 +103,7 @@ namespace DraegerJson
             return patient;
         }
 
-        private Procedure BuildProcedure(ArrivalSick patient, CLAPP clapp, Patient p)
+        private Operation BuildProcedure(ArrivalSick patient, CLAPP clapp, Patient p)
         {
             var pt = clapp.ParseTemplate(
                    p.CaseID,
@@ -111,7 +111,7 @@ namespace DraegerJson
                    new DateTime(1990, 1, 1),
                    DateTime.Now
                );
-            Procedure proc = new Procedure();
+            Operation proc = new Operation();
             proc.Id = pt.TextResult;
             patient.Procedures.Add(proc);   
                
@@ -125,7 +125,7 @@ namespace DraegerJson
             File.AppendAllText("result.txt", pt.TextResult);
         }
 
-        private void BuildParameterFromTemplate(Procedure proc, ParseTemplate pt, SnomedParameter param)
+        private void BuildParameterFromTemplate(Operation proc, ParseTemplate pt, SnomedParameter param)
         {
             var tokens = pt.TextResult.Split(';', StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < tokens.Length; i++) 

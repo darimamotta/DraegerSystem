@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DraegerJson
 {
-    public class Procedure
+    public class Operation
     {
         public string ResourceType { get; set; } = "Procedure";
         public string Id { get; set; } = "";
