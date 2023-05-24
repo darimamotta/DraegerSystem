@@ -84,6 +84,7 @@ namespace DraegerJson
         {
             clapp.SetPatient(p.CaseID);
             ArrivalSick patient = new ArrivalSick();
+            var proc = BuildProcedure(patient, clapp, p);
             foreach (var snomedID in snomedIDs)
             {
                 string template = CreateParamsTemplate(snomedID.Id);
@@ -93,13 +94,32 @@ namespace DraegerJson
                     new DateTime(1990, 1, 1),
                     DateTime.Now
                 );
-                BuildPatientFromTemplate(patient, pt, snomedID);
+                BuildParameterFromTemplate(proc, pt, snomedID);
                 TEMPORARY_writeResultToFile(pt);
 
             }
             
             clapp.ReleasePatient();
             return patient;
+        }
+
+        private Procedure BuildProcedure(ArrivalSick patient, CLAPP clapp, Patient p)
+        {
+            var pt = clapp.ParseTemplate(
+                   p.CaseID,
+                   CreateProcedureTemplate(),
+                   new DateTime(1990, 1, 1),
+                   DateTime.Now
+               );
+            Procedure proc = new Procedure();
+            var tokens = pt.TextResult.Split(';', StringSplitOptions.RemoveEmptyEntries);
+            if (tokens.Length != 0)
+            {
+                proc.Id = tokens[0];
+                patient.Procedures.Add(proc);   
+            }
+        
+            return proc;
         }
 
         private void TEMPORARY_writeResultToFile(ParseTemplate pt)
@@ -109,20 +129,12 @@ namespace DraegerJson
             File.AppendAllText("result.txt", pt.TextResult);
         }
 
-        private void BuildPatientFromTemplate(ArrivalSick patient, ParseTemplate pt, SnomedParameter param)
+        private void BuildParameterFromTemplate(Procedure proc, ParseTemplate pt, SnomedParameter param)
         {
             var tokens = pt.TextResult.Split(';', StringSplitOptions.RemoveEmptyEntries);
-            if (tokens.Length == 0) 
+            for (int i = 0; i < tokens.Length; i++) 
             {
-                return;
-            }
-            patient.Procedure = new Procedure
-            {
-                Id = tokens.Last()
-            };
-            for (int i = 0; i < tokens.Length-1; i++) 
-            {
-                patient.Params.Add(
+                proc.Params.Add(
                     new Parameter
                     {
                         Id = param.Id,
