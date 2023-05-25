@@ -61,7 +61,7 @@ class Program
         //find an error in json 
         try
         {
-            Console.WriteLine("Process from {0} to {1}...", pastTimestamp.ToString("yyyy.MM.dd_HH.mm"), currentTimestamp.ToString("yyyy.MM.dd_HH.mm"));
+            Console.WriteLine("Process from {0} to {1}...", pastTimestamp.ToString("yyyy.MM.dd_HH.mm.ss"), currentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss"));
             Hospital? hospital = hospitalProvider!.GetHospital();
             if(hospital != null )
             {

@@ -13,7 +13,7 @@ namespace DraegerConsole
         public Hospital GetHospital()
         {
             ArrivalSick patient1 = new ArrivalSick();
-            patient1.Id = 1;
+            patient1.Id = "1";
             
             Operation procedure1 = new Operation();
             procedure1.ResourceType = "Procedure";
@@ -36,7 +36,7 @@ namespace DraegerConsole
             procedure1.Params.Add(parameter2);
 
             ArrivalSick patient2 = new ArrivalSick();
-            patient2.Id = 2;
+            patient2.Id = "2";
 
             Operation procedure2 = new Operation();
             procedure2.ResourceType = "Procedure";
