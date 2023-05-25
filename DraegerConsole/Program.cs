@@ -16,6 +16,8 @@ class Program
     private static void SetTimer()
     {
         timer = new System.Timers.Timer(10000);
+        pastTimestamp = DateTime.Now;
+        currentTimestamp =DateTime.Now;
         //event is called by timer, we can subscribe to this event trigger
         //BuildJson is a handler like a  "trigger" for schedule
         //Elapsed is event to which we subscribe by method BuildJson
@@ -25,10 +27,12 @@ class Program
         timer.Enabled = true;
     }
     private static IHospitalProvider? hospitalProvider = null;
+    private static DateTime pastTimestamp;
+    private static DateTime currentTimestamp;
 
     //Buildjson function is called every minute
     private static void BuildJson(object? source, ElapsedEventArgs e)  
-    { 
+    {
         //IObjectsForJsonProvider jsonProvider = new DraegerJsonProvider
         //(
         //    "361609fb-09a8-47c8-9bc3-d2b4db36eb2d.pfx",
@@ -38,28 +42,31 @@ class Program
         //    "CLTDEMOCLAPP01",
         //    "clappathon"
         //);
-        if (hospitalProvider == null) 
-            hospitalProvider =new DraegerHospitalProvider(
-                "C:\\createdcertificates\\92e4a881-3157-4581-8926-69d54e44db6a.pfx",
-                "434afeea-c27f-42b9-a10d-e5fe8e69131b",
-                "Clapp1",
-                "SRVDEMOICM05V.DRAEGER.DEMO.CH",
-                25000,
-                "clappathon"
-            );
-        DateTime timestamp = DateTime.Now;
+        pastTimestamp = currentTimestamp;
+        currentTimestamp = DateTime.Now;
+        hospitalProvider =new DraegerHospitalProvider(
+            "C:\\createdcertificates\\92e4a881-3157-4581-8926-69d54e44db6a.pfx",
+            "434afeea-c27f-42b9-a10d-e5fe8e69131b",
+            "Clapp1",
+            "SRVDEMOICM05V.DRAEGER.DEMO.CH",
+            25000,
+            "clappathon",
+            pastTimestamp,
+            currentTimestamp
+        );     
 
         //create a json file name for specific time
-        IJsonProcessor jsonProcessor = new FileJsonProcessor("data/stamp_" + timestamp.ToString("yyyy.MM.dd_HH.mm.ss") + ".json");
+        IJsonProcessor jsonProcessor = new FileJsonProcessor("data/stamp_" + currentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss") + ".json");
         //from object Root create a txt format of json
         ConverterJson converterJson = new ConverterJson();
         //find an error in json 
         try
         {
-            Console.WriteLine("Process {0}...", timestamp.ToString("yyyy.MM.dd_HH.mm.ss"));
+            Console.WriteLine("Process {0}...", currentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss"));
             Hospital? hospital = hospitalProvider!.GetHospital();
             if(hospital != null )
             {
+                hospital.Timestamp = currentTimestamp;
                 jsonProcessor.ProcessJson(converterJson.Convert(hospital));
             }
             Console.WriteLine("OK. Enter 'Exit' for Stop ");

@@ -26,7 +26,9 @@ namespace DraegerJson
             string clappId,
             string serverHostName,
             int serverPort,
-            string domainId
+            string domainId,
+            DateTime fromTimestamp,
+            DateTime toTimestamp
            
         ) 
         {
@@ -36,6 +38,8 @@ namespace DraegerJson
             this.serverHostName = serverHostName;
             this.domainId = domainId;
             this.serverPort = serverPort;
+            this.fromTimestamp = fromTimestamp;
+            this.toTimestamp = toTimestamp;
             
         }
         public CLAPPConfiguration CreateConfig()
@@ -91,8 +95,8 @@ namespace DraegerJson
                 var pt = clapp.ParseTemplate(
                     p.CaseID,
                     template,
-                    new DateTime(1990, 1, 1),
-                    DateTime.Now
+                    fromTimestamp,
+                    toTimestamp
                 );
                 BuildParameterFromTemplate(proc, pt, snomedID);
                 TEMPORARY_writeResultToFile(pt);
@@ -149,6 +153,9 @@ namespace DraegerJson
         private string serverHostName;
         private string domainId;
         private int serverPort;
+        private DateTime fromTimestamp;
+        private DateTime toTimestamp;
+
         private static List <SnomedParameter> snomedIDs = new List<SnomedParameter>()
         {
             new SnomedParameter { Id = "363788007", Name = "Eintritt erfolgt" },
