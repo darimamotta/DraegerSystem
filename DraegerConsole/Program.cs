@@ -16,8 +16,6 @@ class Program
     private static void SetTimer()
     {
         timer = new System.Timers.Timer(10000);
-        pastTimestamp = DateTime.Now;
-        currentTimestamp =DateTime.Now;
         //event is called by timer, we can subscribe to this event trigger
         //BuildJson is a handler like a  "trigger" for schedule
         //Elapsed is event to which we subscribe by method BuildJson
@@ -29,6 +27,7 @@ class Program
     private static IHospitalProvider? hospitalProvider = null;
     private static DateTime pastTimestamp;
     private static DateTime currentTimestamp;
+    private static readonly DateTime defaultStartTimestamp = new DateTime(1990, 1, 1, 0, 0, 0);
 
     //Buildjson function is called every minute
     private static void BuildJson(object? source, ElapsedEventArgs e)  
@@ -62,7 +61,7 @@ class Program
         //find an error in json 
         try
         {
-            Console.WriteLine("Process {0}...", currentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss"));
+            Console.WriteLine("Process from {0} to {1}...", pastTimestamp.ToString("yyyy.MM.dd_HH.mm"), currentTimestamp.ToString("yyyy.MM.dd_HH.mm"));
             Hospital? hospital = hospitalProvider!.GetHospital();
             if(hospital != null )
             {
@@ -70,6 +69,7 @@ class Program
                 jsonProcessor.ProcessJson(converterJson.Convert(hospital));
             }
             Console.WriteLine("OK. Enter 'Exit' for Stop ");
+            File.WriteAllText("lastTimestamp", currentTimestamp.ToString());
         }
         //process this error in block catch  
         catch (Exception ex) 
@@ -81,6 +81,7 @@ class Program
     private static void ProcessError(Exception ex)
     {
         Console.WriteLine(ex.ToString());
+        System.Environment.Exit(1);
     }
     //launch app and show time of start
     static int Main(string[] args)
@@ -107,6 +108,7 @@ class Program
       
         
         SetTimer();
+        SetStartTimestamp();
         Console.WriteLine("Application started at "+ DateTime.Now);
         //enter exit for stop 
         Console.WriteLine("Enter 'Exit' for stop application");
@@ -128,6 +130,53 @@ class Program
        
         return 0;
       
+    }
+
+    private static void SetStartTimestamp()
+    {
+        if (File.Exists("lastTimestamp"))
+            ReadTimestampFromFile();
+        else
+            ReadTimestampFromConsole();
+    }
+
+    private static void ReadTimestampFromFile()
+    {
+        try
+        {
+            currentTimestamp = DateTime.Parse(File.ReadAllText("lastTimestamp"));
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error reading from file 'lastTimestamp'");
+            ProcessError(e);
+        }
+    }
+
+    private static void ReadTimestampFromConsole()
+    {
+        Console.WriteLine("Enter initial value of timestamp (empty line for {0})", defaultStartTimestamp);
+        string? input = Console.ReadLine();
+        if (input == null)
+        {
+            Console.WriteLine("Error reading from console");
+            System.Environment.Exit(1);
+        }
+        if (input.Trim().Length == 0)
+        {
+            currentTimestamp = defaultStartTimestamp;
+            return;
+        }
+        try
+        {
+            currentTimestamp = DateTime.Parse(input);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Incorrect format of Timestamp");
+            ProcessError(e);
+        }
+
     }
 }
 
