@@ -56,6 +56,7 @@ namespace DraegerJson
             CreateSubject(pat, p);
             CreatePeriod(param, p);
             CreateCoding(param, p);
+            CreateRecorder(param, p);
             AddProcedureToBundle(bundle, p);
         }
 
@@ -69,7 +70,7 @@ namespace DraegerJson
         private static Procedure CreateProcedure(Operation op)
         {
             Procedure p = new Procedure();
-            p.Id = op.Id;
+            p.Id = "Procedure/"+op.Id;
             p.Category = new CodeableConcept();
             return p;
         }
@@ -93,11 +94,16 @@ namespace DraegerJson
         private static void CreatePeriod(Parameter param, Procedure p)
         {
             Period period = new Period();
-            period.Start = param.Date.ToString("yyyy-MM-ddTHH:mm:ssZ");
-            period.End = param.Date.ToString("yyyy-MM-ddTHH:mm:ssZ");
+            period.Start = param.Date.ToString("yyyy-MM-ddTHH:mm:sszzz");
+            period.End = param.Date.ToString("yyyy-MM-ddTHH:mm:sszzz");
             p.Performed = period;
         }
-
+        private static void CreateRecorder(Parameter param, Procedure p)
+        {
+            ResourceReference sub = new ResourceReference();
+            sub.Reference = "Technical User/EXTMON";
+            p.Recorder = sub;
+        }
         private Bundle CreateNewBundle(Hospital hospital)
         {
             var bundle = new Bundle();

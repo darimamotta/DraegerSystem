@@ -9,10 +9,12 @@ using System.Security.Cryptography.X509Certificates;
 using System.Timers;
 using System.Security.Cryptography;
 using System.Xml.Linq;
+using System.Text.Json;
 
 class Program
 {
     private static System.Timers.Timer? timer;
+    private static ConnectionConfiguration? configuration;
     private static void SetTimer()
     {
         timer = new System.Timers.Timer(10000);
@@ -44,12 +46,12 @@ class Program
         pastTimestamp = currentTimestamp;
         currentTimestamp = DateTime.Now;
         hospitalProvider =new DraegerHospitalProvider(
-            "C:\\createdcertificates\\92e4a881-3157-4581-8926-69d54e44db6a.pfx",
-            "434afeea-c27f-42b9-a10d-e5fe8e69131b",
-            "Clapp1",
-            "SRVDEMOICM05V.DRAEGER.DEMO.CH",
-            25000,
-            "clappathon",
+            configuration.Certificate,
+            configuration.CertificateFilePassword,
+            configuration.ClappId,
+            configuration.ServerHostName,
+            configuration.ServerPort,
+            configuration.DomainId,
             pastTimestamp,
             currentTimestamp
         );     
@@ -77,6 +79,18 @@ class Program
             ProcessError(ex);
         }
     }
+
+    private static ConnectionConfiguration? ReadConfiguration()
+    {
+        if (!File.Exists("config/connectionConfig.json"))
+        {
+            Console.WriteLine("Configuration File not found");
+            System.Environment.Exit(1);
+        }
+        return
+        JsonSerializer.Deserialize<ConnectionConfiguration>(File.ReadAllText("config/connectionConfig.json"));
+    }
+
     //function for error  processng where ex is error value 
     private static void ProcessError(Exception ex)
     {
@@ -105,8 +119,13 @@ class Program
             //DSI name – clappathon
             
         };
-      
-        
+
+        configuration = ReadConfiguration();
+        if (configuration == null)
+        {
+            Console.WriteLine("Configuration Creation failed");
+            System.Environment.Exit(1);
+        }
         SetTimer();
         SetStartTimestamp();
         Console.WriteLine("Application started at "+ DateTime.Now);

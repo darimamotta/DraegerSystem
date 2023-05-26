@@ -1,0 +1,8 @@
+{
+  "Certificate": "C:/createdcertificates/92e4a881-3157-4581-8926-69d54e44db6a.pfx",
+  "CertificateFilePassword": "434afeea-c27f-42b9-a10d-e5fe8e69131b",
+  "ClappId": "Clapp1",
+  "ServerHostName": "SRVDEMOICM05V.DRAEGER.DEMO.CH",
+  "DomainId": "clappathon",
+  "ServerPort": 25000
+}

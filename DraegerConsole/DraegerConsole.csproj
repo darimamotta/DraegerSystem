@@ -31,4 +31,9 @@
 	  <PackageReference Include="Draeger.Pdms.Services.Logging.Core" Version="1.0.1" />
 	  <PackageReference Include="Hl7.Fhir.R4" Version="5.1.0" />
 	</ItemGroup>
+	<ItemGroup>
+	  <None Update="config\connectionConfig.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
 </Project>
