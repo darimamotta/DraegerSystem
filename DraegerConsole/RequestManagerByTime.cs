@@ -90,9 +90,9 @@ namespace DraegerConsole
             configuration = ReadConfiguration();
             if (configuration == null)
                 throw new ReadConfigException("Configuration creation failed");
-            BuildJson();
-            SetTimer();
             SetStartTimestamp();
+            BuildJson();
+            SetTimer();            
             Console.WriteLine("Application started at " + DateTime.Now);
             Console.WriteLine("Enter 'Exit' for stop application");
             do
