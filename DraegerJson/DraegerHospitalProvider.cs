@@ -52,6 +52,7 @@ namespace DraegerJson
                 DomainID = domainId,
                 ServerHostname = serverHostName,
                 ServerPort = serverPort
+                
             };
         }
         public Hospital? GetHospital()
@@ -77,13 +78,43 @@ namespace DraegerJson
                 PatientsList pList = clapp.GetPatientsList(); 
                 foreach (var p in pList.PatientList) 
                 {
-                    ArrivalSick patient = BuildPatient(clapp, p);
+                    //ArrivalSick patient = BuildPatient(clapp, p);
+                    ArrivalSick patient = Temporary_request_05102023(clapp, p);
                     hospital.Patients.Add(patient);
                 }
             } 
             return hospital;
         }
+        DateTime tempFromTimestamp = new DateTime(2023, 5, 10, 10, 50, 0);
+        DateTime tempToTimestamp = new DateTime();
+        int tempMinutes = 10;
+            
+        private ArrivalSick Temporary_request_05102023(CLAPP clapp, Patient p)
+        {
+            tempToTimestamp = tempFromTimestamp.AddMinutes(tempMinutes);
+            clapp.SetPatient(p.CaseID);
+            ArrivalSick patient = new ArrivalSick { Id = p.CaseID };
+            var proc = BuildProcedure(patient, clapp, p);
 
+            foreach (var snomedID in snomedIDs)
+            {
+                string template = CreateParamsTemplate(snomedID.Id, tempFromTimestamp, tempToTimestamp);
+                var pt = clapp.ParseTemplate(
+                    p.CaseID,
+                    template,
+                    tempFromTimestamp,
+                    tempToTimestamp
+                );
+                BuildParameterFromTemplate(proc, pt, snomedID);
+
+
+            }
+
+            clapp.ReleasePatient();
+            tempFromTimestamp = tempToTimestamp;
+            return patient;
+
+        }
         private ArrivalSick BuildPatient(CLAPP clapp, Patient p)
         {
             clapp.SetPatient(p.CaseID);
@@ -99,7 +130,6 @@ namespace DraegerJson
                     toTimestamp
                 );
                 BuildParameterFromTemplate(proc, pt, snomedID);
-                TEMPORARY_writeResultToFile(pt);
 
             }
             
@@ -122,12 +152,6 @@ namespace DraegerJson
             return proc;
         }
 
-        private void TEMPORARY_writeResultToFile(ParseTemplate pt)
-        {
-            if (File.Exists("result.txt"))
-                return;
-            File.AppendAllText("result.txt", pt.TextResult);
-        }
 
         private void BuildParameterFromTemplate(Operation proc, ParseTemplate pt, SnomedParameter param)
         {
@@ -178,7 +202,7 @@ namespace DraegerJson
         {
             string t = 
                 $"[Orders:Records=First; " +
-                $"Range=All; " +
+                $"Range=Context; " +
                 $"ExternalIDType=SNOMED; " +
                 $"ExternalID={snomedID}; " +
                 $"Format=!({{Begin}})~];";
@@ -186,6 +210,20 @@ namespace DraegerJson
             return t;
 
         }
+        private string CreateParamsTemplate(string snomedID, DateTime from, DateTime to)
+    
+        {
+            string t =
+                $"[Orders:Records=First; " +
+                $"Range=NOW-21d@{from.ToString("HH:mm")}...NOW-20d@{to.ToString("HH:mm")}; " +              
+                $"ExternalIDType=SNOMED; " +
+                $"ExternalID={snomedID}; " +
+                $"Format=!({{Begin}})~];";
+            Console.WriteLine(t);
+            return t;
+
+        }
+
         private string CreateProcedureTemplate ()
         {
             return "[PreOP: Format=!({OP_ID})]";
