@@ -21,7 +21,7 @@ class Program
     }
     static int Main(string[] args)
     {
-        RequestManagerByTime request = new RequestManagerByTime(10000);
+        RequestManagerByTime request = new RequestManagerByTime(3000);
         try
         {
             request.StartRequests();
