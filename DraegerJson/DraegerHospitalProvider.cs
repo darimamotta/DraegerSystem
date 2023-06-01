@@ -75,6 +75,8 @@ namespace DraegerJson
 
             using (CLAPP clapp = new CLAPP(config))
             {
+                tempToTimestamp = tempFromTimestamp.AddMinutes(tempMinutes);
+                Console.WriteLine("{0} {1}", tempFromTimestamp, tempToTimestamp);
                 PatientsList pList = clapp.GetPatientsList(); 
                 foreach (var p in pList.PatientList) 
                 {
@@ -82,16 +84,17 @@ namespace DraegerJson
                     ArrivalSick patient = Temporary_request_05102023(clapp, p);
                     hospital.Patients.Add(patient);
                 }
-            } 
+            }
+            tempFromTimestamp = tempToTimestamp;
             return hospital;
         }
-        DateTime tempFromTimestamp = new DateTime(2023, 5, 10, 10, 50, 0);
-        DateTime tempToTimestamp = new DateTime();
-        int tempMinutes = 10;
+        static DateTime tempFromTimestamp = new DateTime(2023, 5, 10, 9, 50, 0);
+        static DateTime tempToTimestamp = new DateTime();
+        static int tempMinutes = 10;
             
         private ArrivalSick Temporary_request_05102023(CLAPP clapp, Patient p)
         {
-            tempToTimestamp = tempFromTimestamp.AddMinutes(tempMinutes);
+            
             clapp.SetPatient(p.CaseID);
             ArrivalSick patient = new ArrivalSick { Id = p.CaseID };
             var proc = BuildProcedure(patient, clapp, p);
@@ -111,7 +114,7 @@ namespace DraegerJson
             }
 
             clapp.ReleasePatient();
-            tempFromTimestamp = tempToTimestamp;
+          
             return patient;
 
         }
@@ -215,14 +218,15 @@ namespace DraegerJson
         {
             string t =
                 $"[Orders:Records=First; " +
-                $"Range=NOW-21d@{from.ToString("HH:mm")}...NOW-20d@{to.ToString("HH:mm")}; " +              
+                $"Range=NOW-22d@{from.ToString("HH:mm")}...NOW-22d@{to.ToString("HH:mm")}; " +                           
                 $"ExternalIDType=SNOMED; " +
                 $"ExternalID={snomedID}; " +
                 $"Format=!({{Begin}})~];";
-            Console.WriteLine(t);
+          
             return t;
 
-        }
+        } 
+        //$"Range=NOW-21d@{from.ToString("HH:mm")}...NOW-2d@{to.ToString("HH:mm")}; " + 
 
         private string CreateProcedureTemplate ()
         {
