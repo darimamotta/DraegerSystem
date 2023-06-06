@@ -13,4 +13,8 @@
     <PackageReference Include="Draeger.Pdms.Services.Logging.Core" Version="1.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DraegerConsole\DraegerConsole.csproj" />
+  </ItemGroup>
+
 </Project>
