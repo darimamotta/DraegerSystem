@@ -52,6 +52,7 @@ namespace DraegerJson
                 DomainID = domainId,
                 ServerHostname = serverHostName,
                 ServerPort = serverPort
+                
             };
         }
         public Hospital? GetHospital()
@@ -80,10 +81,15 @@ namespace DraegerJson
                     ArrivalSick patient = BuildPatient(clapp, p);
                     hospital.Patients.Add(patient);
                 }
-            } 
+            }
+            
             return hospital;
         }
-
+       
+        
+          
+        
+        
         private ArrivalSick BuildPatient(CLAPP clapp, Patient p)
         {
             clapp.SetPatient(p.CaseID);
@@ -99,7 +105,6 @@ namespace DraegerJson
                     toTimestamp
                 );
                 BuildParameterFromTemplate(proc, pt, snomedID);
-                TEMPORARY_writeResultToFile(pt);
 
             }
             
@@ -122,12 +127,6 @@ namespace DraegerJson
             return proc;
         }
 
-        private void TEMPORARY_writeResultToFile(ParseTemplate pt)
-        {
-            if (File.Exists("result.txt"))
-                return;
-            File.AppendAllText("result.txt", pt.TextResult);
-        }
 
         private void BuildParameterFromTemplate(Operation proc, ParseTemplate pt, SnomedParameter param)
         {
@@ -158,27 +157,27 @@ namespace DraegerJson
 
         private static List <SnomedParameter> snomedIDs = new List<SnomedParameter>()
         {
-            new SnomedParameter { Id = "363788007", Name = "Eintritt erfolgt" },
-            new SnomedParameter { Id = "419126006", Name = "Beginn Anästhesiebetreuung" },
-            new SnomedParameter { Id = "441765008", Name = "Beginn Einleitung" },
-            new SnomedParameter { Id = "442335003", Name = "Ende Einleitung, Freigabe" },
-            new SnomedParameter { Id = "442272006", Name = "Beginn op. Vorb.(Lagerung) nichtärztl." },
-            new SnomedParameter { Id = "442385007", Name = "Saaleinfahrt" },
-            new SnomedParameter { Id = "442126001", Name = "Beginn op. Vorb. (Desinfektion) ärztl" },
-            new SnomedParameter { Id = "442371002", Name = "Beginn Hautschnitt (Schnitt)" },
-            new SnomedParameter { Id = "442137000", Name = "Ende Hautnaht (Naht)" },
-            new SnomedParameter { Id = "442273001", Name = "Ende op. Nachbereit." },
-            new SnomedParameter { Id = "398164008", Name = "Ende Ausleitung" },
-            new SnomedParameter { Id = "441969007", Name = "Saalausfahrt" },
-            new SnomedParameter { Id = "397927004", Name = "Ende Anästhesiebetreuung" },
-            new SnomedParameter { Id = "442431006", Name = "Ausfahrt Aufwachraum" }
+            new SnomedParameter { Id = "363788007", Name = "Time of patient arrival in healthcare facility" },
+            new SnomedParameter { Id = "419126006", Name = "Anesthesia preparation time" },
+            new SnomedParameter { Id = "441765008", Name = "Time of induction of anesthesia" },
+            new SnomedParameter { Id = "442335003", Name = "Time of establishment of adequate anesthesia" },
+            new SnomedParameter { Id = "442272006", Name = "Time patient ready for transport" },
+            new SnomedParameter { Id = "442385007", Name = "Time of patient arrival in procedure room" },
+            new SnomedParameter { Id = "442126001", Name = "Start time for preparation of patient procedure room" },
+            new SnomedParameter { Id = "442371002", Name = "Start time of procedure" },
+            new SnomedParameter { Id = "442137000", Name = "Completion time of procedure" },
+            new SnomedParameter { Id = "442273001", Name = "Time procedure room ready for next case" },
+            new SnomedParameter { Id = "398164008", Name = "Anesthesia finish time" },
+            new SnomedParameter { Id = "441969007", Name = "Time of patient departure from procedure room" },
+            new SnomedParameter { Id = "397927004", Name = "Time ready for discharge from post anesthesia care unit" },
+            new SnomedParameter { Id = "442431006", Name = "Time of discharge from post anesthesia care unit" }
         };
 
         private string CreateParamsTemplate( string snomedID)
         {
             string t = 
                 $"[Orders:Records=First; " +
-                $"Range=All; " +
+                $"Range=CTX...CTX; " +
                 $"ExternalIDType=SNOMED; " +
                 $"ExternalID={snomedID}; " +
                 $"Format=!({{Begin}})~];";
@@ -186,6 +185,21 @@ namespace DraegerJson
             return t;
 
         }
+        private string CreateParamsTemplate(string snomedID, DateTime from, DateTime to)
+    
+        {
+            string t =
+                $"[Orders:Records=First; " +
+                $"Range=NOW@{from.ToString("HH:mm")}...NOW@{to.ToString("HH:mm")}; " +                           
+                $"ExternalIDType=SNOMED; " +
+                $"ExternalID={snomedID}; " +
+                $"Format=!({{Begin}})~];";
+          
+            return t;
+
+        } 
+        //$"Range=NOW-21d@{from.ToString("HH:mm")}...NOW-2d@{to.ToString("HH:mm")}; " + 
+
         private string CreateProcedureTemplate ()
         {
             return "[PreOP: Format=!({OP_ID})]";

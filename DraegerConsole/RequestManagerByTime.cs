@@ -11,6 +11,7 @@ using System.Security.Cryptography;
 using System.Xml.Linq;
 using System.Text.Json;
 using DraegerConsole.exceptions;
+using System;
 
 namespace DraegerConsole
 {
@@ -20,6 +21,19 @@ namespace DraegerConsole
         private System.Timers.Timer? timer;
         private ConnectionConfiguration? configuration;
         private int delay;
+        private DateTime[] temporaryDateTimes = new DateTime[]
+        {
+            new DateTime(2023,5,10,9,30,0,DateTimeKind.Local),
+            new DateTime(2023,5,10,9,40,0,DateTimeKind.Local),
+            new DateTime(2023,5,10,9,50,0,DateTimeKind.Local),
+            new DateTime(2023,5,10,10,0,0,DateTimeKind.Local),
+            new DateTime(2023,5,10,10,10,0,DateTimeKind.Local),
+            new DateTime(2023,5,10,10,20,0,DateTimeKind.Local),
+            new DateTime(2023,5,10,10,30,0,DateTimeKind.Local),
+            new DateTime(2023,5,10,10,40,0,DateTimeKind.Local),
+            new DateTime(2023,5,10,10,50,0,DateTimeKind.Local),
+            new DateTime(2023,5,10,11,0,0,DateTimeKind.Local)
+        };
 
         public RequestManagerByTime(int delay)
         {
@@ -45,9 +59,7 @@ namespace DraegerConsole
         private readonly DateTime defaultStartTimestamp = new DateTime(1990, 1, 1, 0, 0, 0);
         private void BuildJson()
         {
-           
-            pastTimestamp = currentTimestamp;
-            currentTimestamp = DateTime.Now;
+            SetUpTimestamps();
             hospitalProvider = new DraegerHospitalProvider(
                 configuration!.Certificate,
                 configuration.CertificateFilePassword,
@@ -59,9 +71,9 @@ namespace DraegerConsole
                 currentTimestamp
             );
 
-          
+
             IJsonProcessor jsonProcessor = new FileJsonProcessor("data/stamp_" + currentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss") + ".json");
-            ConverterJson converterJson = new ConverterJson();        
+            ConverterJson converterJson = new ConverterJson();
             Console.WriteLine("Process from {0} to {1}...", pastTimestamp.ToString("yyyy.MM.dd_HH.mm.ss"), currentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss"));
             Hospital? hospital = hospitalProvider!.GetHospital();
             if (hospital != null)
@@ -71,7 +83,17 @@ namespace DraegerConsole
             }
             Console.WriteLine("OK. Enter 'Exit' for Stop ");
             File.WriteAllText("lastTimestamp", currentTimestamp.ToString());
-                    
+
+        }
+
+        private int temporaryIndex =0;
+        private void SetUpTimestamps()
+        {
+            //pastTimestamp = currentTimestamp;
+            //currentTimestamp = DateTime.Now;
+            pastTimestamp = temporaryDateTimes[temporaryIndex];
+            currentTimestamp = temporaryDateTimes[temporaryIndex+1];
+            temporaryIndex++;
         }
 
         private static ConnectionConfiguration? ReadConfiguration()
