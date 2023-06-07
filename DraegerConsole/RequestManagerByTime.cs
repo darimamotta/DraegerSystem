@@ -21,6 +21,7 @@ namespace DraegerConsole
         private System.Timers.Timer? timer;
         private ConnectionConfiguration? configuration;
         private int delay;
+        //temporary timestamps 
         private DateTime[] temporaryDateTimes = new DateTime[]
         {
             new DateTime(2023,5,10,9,30,0,DateTimeKind.Local),
@@ -89,11 +90,13 @@ namespace DraegerConsole
         private int temporaryIndex =0;
         private void SetUpTimestamps()
         {
-            pastTimestamp = currentTimestamp;
-            currentTimestamp = DateTime.Now;
-            //pastTimestamp = temporaryDateTimes[temporaryIndex];
-            //currentTimestamp = temporaryDateTimes[temporaryIndex+1];
-            //temporaryIndex++;
+            //actual timestamps
+            //pastTimestamp = currentTimestamp;
+            //currentTimestamp = DateTime.Now;
+            //temporary timestamps 
+            pastTimestamp = temporaryDateTimes[temporaryIndex];
+            currentTimestamp = temporaryDateTimes[temporaryIndex+1];
+            temporaryIndex++;
         }
 
         private static ConnectionConfiguration? ReadConfiguration()

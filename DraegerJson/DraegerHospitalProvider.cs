@@ -173,30 +173,30 @@ namespace DraegerJson
             new SnomedParameter { Id = "442431006", Name = "Time of discharge from post anesthesia care unit" }
         };
 
-        private string CreateParamsTemplate( string snomedID)
-        {
-            string t = 
-                $"[Orders:Records=First; " +
-                $"Range=CTX...CTX; " +
-                $"ExternalIDType=SNOMED; " +
-                $"ExternalID={snomedID}; " +
-                $"Format=!({{Begin}})~];";
-            
-            return t;
-
-        }
-        private string CreateParamsTemplate(string snomedID, DateTime from, DateTime to)    
-        {
-            string t =
-                $"[Orders:Records=First; " +
-                $"Range=NOW-29d@{from.ToString("HH:mm")}...NOW-29d@{to.ToString("HH:mm")}; " +                           
-                $"ExternalIDType=SNOMED; " +
-                $"ExternalID={snomedID}; " +
-                $"Format=!({{Begin}})~];";
-          
-            return t;
-
-        } 
+       private string CreateParamsTemplate( string snomedID)
+       {
+           string t = 
+               $"[Orders:Admins=All; " +
+               $"Range=CTX...CTX; " +
+               $"ExternalIDType=SNOMED; " +
+               $"ExternalID={snomedID}; " +
+               $"Format=!({{Begin}})~];";
+           
+           return t;
+       
+       }
+      //private string CreateParamsTemplate(string snomedID, DateTime from, DateTime to)    
+      //{
+      //    string t =
+      //        $"[Orders:Admins=All; " +
+      //        $"Range=NOW-29d@{from.ToString("HH:mm")}...NOW-29d@{to.ToString("HH:mm")}; " +                           
+      //        $"ExternalIDType=SNOMED; " +
+      //        $"ExternalID={snomedID}; " +
+      //        $"Format=!({{Begin}})~];";
+      //  
+      //    return t;
+      //
+      //} 
         //$"Range=NOW-21d@{from.ToString("HH:mm")}...NOW-2d@{to.ToString("HH:mm")}; " + 
 
         private string CreateProcedureTemplate ()
