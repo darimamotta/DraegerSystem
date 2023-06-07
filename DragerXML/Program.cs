@@ -33,6 +33,7 @@ namespace ConsoleApp1
             service.EnteredDateTime = new DateTime(2023, 06, 06, 13, 28, 39);
             service.ProviderID = 124000;
             service.ItemNumber = 2160484;
+            service.RefIItemNumber = 2160484;
             service.Quantity = 1.0;
             visit.Service.Add(service);
             PersonV40 p1 = new PersonV40();

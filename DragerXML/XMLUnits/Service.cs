@@ -33,6 +33,9 @@ namespace DragerXML.XMLUnits
         [XmlElement(ElementName = "ItemNumber")]
         public int ItemNumber { get; set; }
 
+        [XmlElement(ElementName = "RefIItemNumber")]
+        public int RefIItemNumber { get; set; }
+
         [XmlElement(ElementName = "Quantity")]
         public double Quantity { get; set; }
 
@@ -42,7 +45,5 @@ namespace DragerXML.XMLUnits
         [XmlElement(ElementName = "ParameterV40")]
         public List<ParameterV40> ParameterV40 { get; set; } =  new List<ParameterV40>();
 
-        [XmlElement(ElementName = "RefIItemNumber")]
-        public int RefIItemNumber { get; set; }
     }
 }
