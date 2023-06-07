@@ -176,7 +176,7 @@ namespace DraegerJson
         private string CreateParamsTemplate( string snomedID)
         {
             string t = 
-                $"[Orders:Records=First; " +
+                $"[Orders:Admins=All; " +
                 $"Range=CTX...CTX; " +
                 $"ExternalIDType=SNOMED; " +
                 $"ExternalID={snomedID}; " +
