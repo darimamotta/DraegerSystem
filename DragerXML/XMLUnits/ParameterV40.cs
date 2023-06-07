@@ -18,7 +18,7 @@ namespace DragerXML.XMLUnits
         public string ParamTyp { get; set; } = string.Empty;
 
         [XmlText]
-        public int Text { get; set; }
+        public string Text { get; set; }
     }
 
 }

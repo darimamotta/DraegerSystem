@@ -18,11 +18,13 @@ namespace ConsoleApp1
             header.MessageControlID = 12208255;
             header.SoftwareReleaseNumber = 2.3;
             header.FileCreationDate = new DateTime(2023, 06, 06, 13, 28, 39);
+
             Visit visit = new Visit();
             visit.VisitNumber = 0009990002;
             visit.PatientName = "Shachter";
             visit.PatientGivenName = "Tim";
             visit.PatientBirthDate = new DateTime(1995, 07, 08);
+            header.Visit.Add(visit);
             Service service = new Service();
             service.ServiceDate = new DateTime(2023, 06, 06, 13, 28, 39);
             service.SessionID = 1;
@@ -32,6 +34,7 @@ namespace ConsoleApp1
             service.ProviderID = 124000;
             service.ItemNumber = 2160484;
             service.Quantity = 1.0;
+            visit.Service.Add(service);
             PersonV40 p1 = new PersonV40();
             p1.PersonTyp = "ResponsiblePhysician";
             p1.PersonID = 0001107598;

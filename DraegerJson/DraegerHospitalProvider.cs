@@ -176,7 +176,7 @@ namespace DraegerJson
         private string CreateParamsTemplate( string snomedID)
         {
             string t = 
-                $"[Orders:Admins=All; " +
+                $"[Orders:Records=First; " +
                 $"Range=CTX...CTX; " +
                 $"ExternalIDType=SNOMED; " +
                 $"ExternalID={snomedID}; " +
@@ -185,12 +185,11 @@ namespace DraegerJson
             return t;
 
         }
-        private string CreateParamsTemplate(string snomedID, DateTime from, DateTime to)
-    
+        private string CreateParamsTemplate(string snomedID, DateTime from, DateTime to)    
         {
             string t =
-                $"[Orders:Admins=All; " +
-                $"Range=NOW@{from.ToString("HH:mm")}...NOW@{to.ToString("HH:mm")}; " +                           
+                $"[Orders:Records=First; " +
+                $"Range=NOW-29d@{from.ToString("HH:mm")}...NOW-29d@{to.ToString("HH:mm")}; " +                           
                 $"ExternalIDType=SNOMED; " +
                 $"ExternalID={snomedID}; " +
                 $"Format=!({{Begin}})~];";
