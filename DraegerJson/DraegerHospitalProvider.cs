@@ -189,7 +189,7 @@ namespace DraegerJson
     
         {
             string t =
-                $"[Orders:Records=First; " +
+                $"[Orders:Admins=All; " +
                 $"Range=NOW@{from.ToString("HH:mm")}...NOW@{to.ToString("HH:mm")}; " +                           
                 $"ExternalIDType=SNOMED; " +
                 $"ExternalID={snomedID}; " +
