@@ -89,11 +89,11 @@ namespace DraegerConsole
         private int temporaryIndex =0;
         private void SetUpTimestamps()
         {
-            //pastTimestamp = currentTimestamp;
-            //currentTimestamp = DateTime.Now;
-            pastTimestamp = temporaryDateTimes[temporaryIndex];
-            currentTimestamp = temporaryDateTimes[temporaryIndex+1];
-            temporaryIndex++;
+            pastTimestamp = currentTimestamp;
+            currentTimestamp = DateTime.Now;
+            //pastTimestamp = temporaryDateTimes[temporaryIndex];
+            //currentTimestamp = temporaryDateTimes[temporaryIndex+1];
+            //temporaryIndex++;
         }
 
         private static ConnectionConfiguration? ReadConfiguration()
