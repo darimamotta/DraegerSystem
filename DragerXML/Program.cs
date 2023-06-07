@@ -44,6 +44,15 @@ namespace ConsoleApp1
             ParameterV40 par40 = new ParameterV40();
             par40.ParamTyp = "Side";
             par40.ParamValue = 001;
+            service.PersonV40.Add(p1);
+            service.PersonV40.Add(p2);
+            service.PersonV40.Add(p3);
+            service.ParameterV40.Add(par40);
+
+            XmlSerializer serializer = new XmlSerializer(typeof(Header));
+            StreamWriter writer = new StreamWriter("myxml.xml");
+            serializer.Serialize(writer, header);
+            writer.Close();
 
         }
     }
