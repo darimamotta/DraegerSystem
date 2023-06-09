@@ -2,6 +2,7 @@
 using Draeger.Pdms.Services.Json;
 using Draeger.Pdms.Services.Json.Entities;
 using Draft_Draeger;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -185,6 +186,8 @@ namespace DraegerJson
                $"Range=CTX...CTX; " +
                $"ExternalIDType=SNOMED; " +
                $"ExternalID={snomedID}; " +
+               $"[CurrentHISPatientID];"+
+               $"[Pat: Property = Aufnahme_NR];"+
                $"Format=!({{AdminDate}})~];";
            
            return t;
