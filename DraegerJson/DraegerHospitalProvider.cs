@@ -95,6 +95,14 @@ namespace DraegerJson
             clapp.SetPatient(p.CaseID);
             ArrivalSick patient = new ArrivalSick { Id = p.CaseID };
             var proc = BuildProcedure(patient, clapp, p);
+            if (proc.Exist)
+                BuildTimestampsByProcedure(clapp, p, proc);
+            clapp.ReleasePatient();
+            return patient;
+        }
+
+        private void BuildTimestampsByProcedure(CLAPP clapp, Patient p, Operation proc)
+        {
             foreach (var snomedID in snomedIDs)
             {
                 string template = CreateParamsTemplate(snomedID.Id);
@@ -107,9 +115,6 @@ namespace DraegerJson
                 BuildParameterFromTemplate(proc, pt, snomedID);
 
             }
-            
-            clapp.ReleasePatient();
-            return patient;
         }
 
         private Operation BuildProcedure(ArrivalSick patient, CLAPP clapp, Patient p)
@@ -180,7 +185,7 @@ namespace DraegerJson
                $"Range=CTX...CTX; " +
                $"ExternalIDType=SNOMED; " +
                $"ExternalID={snomedID}; " +
-               $"Format=!({{Begin}})~];";
+               $"Format=!({{AdminDate}})~];";
            
            return t;
        

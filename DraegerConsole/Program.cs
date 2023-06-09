@@ -13,17 +13,20 @@ using System.Text.Json;
 
 class Program
 {
-  
+    private static GlobalConfiguration? globConfiguration;
     private static void ProcessError(Exception ex)
     {
         Console.WriteLine(ex.ToString());
         System.Environment.Exit(1);
     }
+
     static int Main(string[] args)
     {
-        RequestManagerByTime request = new RequestManagerByTime(3000);
+        
         try
         {
+            ReadConfigs();
+            RequestManagerByTime request = new RequestManagerByTime(globConfiguration!);
             request.StartRequests();
         }
         catch (Exception ex) 
@@ -34,8 +37,10 @@ class Program
       
     }
 
- 
-
-    
+    private static void ReadConfigs()
+    {
+        globConfiguration = JsonSerializer.Deserialize<GlobalConfiguration>(File.ReadAllText("config/globalConfig.json"));
+        
+    }
 }
 

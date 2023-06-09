@@ -38,7 +38,8 @@ namespace DraegerJson
         {
             foreach (Operation op in pat.Procedures)
             {
-                AddProcedureToBundle(bundle, pat, op);
+                if (op.Exist)
+                    AddProcedureToBundle(bundle, pat, op);
             }
         }
 

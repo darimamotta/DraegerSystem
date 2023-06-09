@@ -19,26 +19,48 @@ namespace DraegerConsole
     public class RequestManagerByTime
     {
         private System.Timers.Timer? timer;
-        private ConnectionConfiguration? configuration;
+        private ConnectionConfiguration? connectionConfiguration;
+        //private GlobalConfiguration? globalConfiguration;
         private int delay;
-        //temporary timestamps 
-        private DateTime[] temporaryDateTimes = new DateTime[]
-        {
-            new DateTime(2023,5,10,9,30,0,DateTimeKind.Local),
-            new DateTime(2023,5,10,9,40,0,DateTimeKind.Local),
-            new DateTime(2023,5,10,9,50,0,DateTimeKind.Local),
-            new DateTime(2023,5,10,10,0,0,DateTimeKind.Local),
-            new DateTime(2023,5,10,10,10,0,DateTimeKind.Local),
-            new DateTime(2023,5,10,10,20,0,DateTimeKind.Local),
-            new DateTime(2023,5,10,10,30,0,DateTimeKind.Local),
-            new DateTime(2023,5,10,10,40,0,DateTimeKind.Local),
-            new DateTime(2023,5,10,10,50,0,DateTimeKind.Local),
-            new DateTime(2023,5,10,11,0,0,DateTimeKind.Local)
-        };
+        private ITimestampUpdater timestampUpdater;
 
-        public RequestManagerByTime(int delay)
+        //temporary timestamps 
+      //private DateTime[] temporaryDateTimes = new DateTime[]
+      //{
+      //    new DateTime(2023,6,8,12,30,0,DateTimeKind.Local),
+      //    new DateTime(2023,6,8,14,30,0,DateTimeKind.Local),
+      //    new DateTime(2023,6,8,16,30,0,DateTimeKind.Local),
+      //    new DateTime(2023,6,8,18,30,0,DateTimeKind.Local),
+      //    new DateTime(2023,6,8,13,10,0,DateTimeKind.Local),
+      //    new DateTime(2023,6,8,13,20,0,DateTimeKind.Local),
+      //    new DateTime(2023,6,8,13,30,0,DateTimeKind.Local),
+      //    new DateTime(2023,6,8,13,40,0,DateTimeKind.Local),
+      //    new DateTime(2023,6,8,13,50,0,DateTimeKind.Local),
+      //    new DateTime(2023,6,8,14,00,0,DateTimeKind.Local),
+      //    new DateTime(2023,6,8,14,10,0,DateTimeKind.Local),
+      //    new DateTime(2023,6,8,14,20,0,DateTimeKind.Local),
+      //    new DateTime(2023,6,8,14,30,0,DateTimeKind.Local),
+      //    new DateTime(2023,6,8,14,40,0,DateTimeKind.Local),
+      //    new DateTime(2023,6,8,14,50,0,DateTimeKind.Local),
+      //    new DateTime(2023,6,8,15,00,0,DateTimeKind.Local),
+      //    new DateTime(2023,5,10,9,30,0,DateTimeKind.Local),
+      //    new DateTime(2023,5,10,9,40,0,DateTimeKind.Local),
+      //    new DateTime(2023,5,10,9,50,0,DateTimeKind.Local),
+      //    new DateTime(2023,5,10,10,0,0,DateTimeKind.Local),
+      //    new DateTime(2023,5,10,10,10,0,DateTimeKind.Local),
+      //    new DateTime(2023,5,10,10,20,0,DateTimeKind.Local),
+      //    new DateTime(2023,5,10,10,30,0,DateTimeKind.Local),
+      //    new DateTime(2023,5,10,10,40,0,DateTimeKind.Local),
+      //    new DateTime(2023,5,10,10,50,0,DateTimeKind.Local),
+      //    new DateTime(2023,5,10,11,0,0,DateTimeKind.Local)
+      //
+      //
+      //};
+
+        public RequestManagerByTime(int delay, ITimestampUpdater timestampUpdater)
         {
-            this.delay = delay;
+            this.delay = delay;     
+            this.timestampUpdater = timestampUpdater;
         }
         private void SetTimer()
         {
@@ -55,48 +77,49 @@ namespace DraegerConsole
         }
 
         private IHospitalProvider? hospitalProvider = null;
-        private DateTime pastTimestamp;
-        private DateTime currentTimestamp;
+       //private DateTime pastTimestamp;
+       //private DateTime currentTimestamp;
         private readonly DateTime defaultStartTimestamp = new DateTime(1990, 1, 1, 0, 0, 0);
         private void BuildJson()
         {
             SetUpTimestamps();
             hospitalProvider = new DraegerHospitalProvider(
-                configuration!.Certificate,
-                configuration.CertificateFilePassword,
-                configuration.ClappId,
-                configuration.ServerHostName,
-                configuration.ServerPort,
-                configuration.DomainId,
-                pastTimestamp,
-                currentTimestamp
+                connectionConfiguration!.Certificate,
+                connectionConfiguration.CertificateFilePassword,
+                connectionConfiguration.ClappId,
+                connectionConfiguration.ServerHostName,
+                connectionConfiguration.ServerPort,
+                connectionConfiguration.DomainId,
+                timestampUpdater.PastTimestamp,
+                timestampUpdater.CurrentTimestamp
             );
 
 
-            IJsonProcessor jsonProcessor = new FileJsonProcessor("data/stamp_" + currentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss") + ".json");
+            IJsonProcessor jsonProcessor = new FileJsonProcessor("data/stamp_" + timestampUpdater.CurrentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss") + ".json");
             ConverterJson converterJson = new ConverterJson();
-            Console.WriteLine("Process from {0} to {1}...", pastTimestamp.ToString("yyyy.MM.dd_HH.mm.ss"), currentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss"));
+            Console.WriteLine("Process from {0} to {1}...", timestampUpdater.PastTimestamp.ToString("yyyy.MM.dd_HH.mm.ss"), timestampUpdater.CurrentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss"));
             Hospital? hospital = hospitalProvider!.GetHospital();
             if (hospital != null)
             {
-                hospital.Timestamp = currentTimestamp;
+                hospital.Timestamp = timestampUpdater.CurrentTimestamp;
                 jsonProcessor.ProcessJson(converterJson.Convert(hospital));
             }
             Console.WriteLine("OK. Enter 'Exit' for Stop ");
-            File.WriteAllText("lastTimestamp", currentTimestamp.ToString());
+            File.WriteAllText("lastTimestamp", timestampUpdater.CurrentTimestamp.ToString());
 
         }
 
-        private int temporaryIndex =0;
+        //private int temporaryIndex =0;
         private void SetUpTimestamps()
         {
+            timestampUpdater.UpdateTimestamps();
             //actual timestamps
             //pastTimestamp = currentTimestamp;
-            //currentTimestamp = DateTime.Now;
+            //currentTimestamp = DateTime.Now.AddSeconds(globalConfiguration!.TimestampsOffsetInSeconds);
             //temporary timestamps 
-            pastTimestamp = temporaryDateTimes[temporaryIndex];
-            currentTimestamp = temporaryDateTimes[temporaryIndex+1];
-            temporaryIndex++;
+            //pastTimestamp = temporaryDateTimes[temporaryIndex];
+            //currentTimestamp = temporaryDateTimes[temporaryIndex+1];
+            //temporaryIndex++;
         }
 
         private static ConnectionConfiguration? ReadConfiguration()
@@ -112,8 +135,8 @@ namespace DraegerConsole
         public void StartRequests()
         {
                      
-            configuration = ReadConfiguration();
-            if (configuration == null)
+            connectionConfiguration = ReadConfiguration();
+            if (connectionConfiguration == null)
                 throw new ReadConfigException("Configuration creation failed");
             SetStartTimestamp();
             BuildJson();
@@ -149,7 +172,7 @@ namespace DraegerConsole
         {
             try
             {
-                currentTimestamp = DateTime.Parse(File.ReadAllText("lastTimestamp"));
+                timestampUpdater.CurrentTimestamp = DateTime.Parse(File.ReadAllText("lastTimestamp"));
             }
             catch (Exception e)
             {
