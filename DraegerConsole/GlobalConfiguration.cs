@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace DraegerConsole
 {
-    internal class GlobalConfiguration
+    public class GlobalConfiguration
     {
         public int DelayBetweenRequestsInMilliseconds { get; set; }
+        public int TimestampsOffsetInSeconds { get; set; }
         
     }
 }

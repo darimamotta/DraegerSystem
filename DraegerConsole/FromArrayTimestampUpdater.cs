@@ -8,9 +8,9 @@ namespace DraegerConsole
 {
     public class FromArrayTimestampUpdater : ITimestampUpdater
     {
-        public DateTime CurrentTimestamp { get { return dateTimes[index + 1]; } }
+        public DateTime CurrentTimestamp { get { return dateTimes[index + 1]; } set { } }
 
-        public DateTime PastTimestamp { get { return dateTimes[index]; }}
+        public DateTime PastTimestamp { get { return dateTimes[index]; } set { } }
         private int index;
         private DateTime[] dateTimes = new DateTime[0];
         

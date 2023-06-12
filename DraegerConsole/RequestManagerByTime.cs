@@ -23,6 +23,7 @@ namespace DraegerConsole
         //private GlobalConfiguration? globalConfiguration;
         private int delay;
         private ITimestampUpdater timestampUpdater;
+        private TimestampHistoryManager historyManager;
 
         //temporary timestamps 
       //private DateTime[] temporaryDateTimes = new DateTime[]
@@ -57,10 +58,16 @@ namespace DraegerConsole
       //
       //};
 
-        public RequestManagerByTime(int delay, ITimestampUpdater timestampUpdater)
+        public RequestManagerByTime(
+            int delay, 
+            ITimestampUpdater timestampUpdater, 
+            TimestampHistoryManager historyManager
+        )
         {
             this.delay = delay;     
             this.timestampUpdater = timestampUpdater;
+            this.historyManager = historyManager;
+            this.timestampUpdater.PastTimestamp = historyManager.History!.Units.Last().To;
         }
         private void SetTimer()
         {
@@ -105,21 +112,21 @@ namespace DraegerConsole
                 jsonProcessor.ProcessJson(converterJson.Convert(hospital));
             }
             Console.WriteLine("OK. Enter 'Exit' for Stop ");
-            File.WriteAllText("lastTimestamp", timestampUpdater.CurrentTimestamp.ToString());
+            historyManager.History!.Units.Add(
+                new TimestampHistoryUnit 
+                {
+                    From = timestampUpdater.PastTimestamp, 
+                    To =timestampUpdater.CurrentTimestamp
+                }
+            );
+            historyManager.Save();
 
         }
 
         //private int temporaryIndex =0;
         private void SetUpTimestamps()
         {
-            timestampUpdater.UpdateTimestamps();
-            //actual timestamps
-            //pastTimestamp = currentTimestamp;
-            //currentTimestamp = DateTime.Now.AddSeconds(globalConfiguration!.TimestampsOffsetInSeconds);
-            //temporary timestamps 
-            //pastTimestamp = temporaryDateTimes[temporaryIndex];
-            //currentTimestamp = temporaryDateTimes[temporaryIndex+1];
-            //temporaryIndex++;
+            timestampUpdater.UpdateTimestamps();           
         }
 
         private static ConnectionConfiguration? ReadConfiguration()
@@ -137,8 +144,7 @@ namespace DraegerConsole
                      
             connectionConfiguration = ReadConfiguration();
             if (connectionConfiguration == null)
-                throw new ReadConfigException("Configuration creation failed");
-            SetStartTimestamp();
+                throw new ReadConfigException("Configuration creation failed");           
             BuildJson();
             SetTimer();            
             Console.WriteLine("Application started at " + DateTime.Now);
@@ -161,46 +167,6 @@ namespace DraegerConsole
         
 
         }
-        private void SetStartTimestamp()
-        {
-            if (File.Exists("lastTimestamp"))
-                ReadTimestampFromFile();
-            else
-                ReadTimestampFromConsole();
-        }
-        private void ReadTimestampFromFile()
-        {
-            try
-            {
-                timestampUpdater.CurrentTimestamp = DateTime.Parse(File.ReadAllText("lastTimestamp"));
-            }
-            catch (Exception e)
-            {
-                throw new FileFormatException("Error reading from file 'lastTimestamp'");
-            }
-        }
-
-        private void ReadTimestampFromConsole()
-        {
-            Console.WriteLine("Enter initial value of timestamp (empty line for {0})", defaultStartTimestamp);
-            string? input = Console.ReadLine();
-            if (input == null)
-                throw new UnknownErrorException("Error reading from console");
-            if (input.Trim().Length == 0)
-            {
-                currentTimestamp = defaultStartTimestamp;
-                return;
-            }
-            try
-            {
-                currentTimestamp = DateTime.Parse(input);
-            }
-            catch (Exception e)
-            {
-                throw new InputFormatException("Incorrect format of Timestamp");
-            }
-
-        }
-
+       
     }
 }

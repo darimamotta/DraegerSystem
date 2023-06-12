@@ -10,10 +10,14 @@ using System.Timers;
 using System.Security.Cryptography;
 using System.Xml.Linq;
 using System.Text.Json;
+using DraegerConsole.exceptions;
 
 class Program
 {
     private static GlobalConfiguration? globConfiguration;
+    private static TimestampHistoryManager? historyManager;
+    private static ITimestampUpdater? timestampUpdater;
+    private const string PathToHistory = "history/history.json";
     private static void ProcessError(Exception ex)
     {
         Console.WriteLine(ex.ToString());
@@ -26,7 +30,13 @@ class Program
         try
         {
             ReadConfigs();
-            RequestManagerByTime request = new RequestManagerByTime(globConfiguration!);
+            historyManager = BuildHistoryManager();
+            timestampUpdater = BuildTimestampUpdater();
+            RequestManagerByTime request = new RequestManagerByTime(
+                globConfiguration!.DelayBetweenRequestsInMilliseconds, 
+                timestampUpdater, 
+                historyManager
+            );
             request.StartRequests();
         }
         catch (Exception ex) 
@@ -35,6 +45,50 @@ class Program
         }
         return 0;
       
+    }
+
+    private static TimestampHistoryManager BuildHistoryManager()
+    {
+        TimestampHistoryManager thm = new TimestampHistoryManager(PathToHistory);
+        if (File.Exists(PathToHistory))
+        {
+            thm.Load();
+        }
+        else 
+        { 
+            DateTime start = ReadTimestampFromConsole();
+            thm.Initialize(start);          
+        }
+        return thm;
+    }
+    private static DateTime ReadTimestampFromConsole()
+    {
+        Console.WriteLine("Enter initial value of timestamp (empty line for {0})", TimestampHistoryManager.DefaultStartTimestamp );
+        string? input = Console.ReadLine();
+        if (input == null)
+            throw new UnknownErrorException("Error reading from console");
+        if (input.Trim().Length == 0)
+        {
+            
+            return TimestampHistoryManager.DefaultStartTimestamp;
+        }
+        try
+        {
+            return DateTime.Parse(input);
+        }
+        catch (Exception e)
+        {
+            throw new InputFormatException("Incorrect format of Timestamp");
+        }
+
+    }
+
+    private static ITimestampUpdater BuildTimestampUpdater()
+    {
+        return new NowTimestampUpdater(
+            globConfiguration!.TimestampsOffsetInSeconds,
+            historyManager!.History!.Units.Last().To
+        );
     }
 
     private static void ReadConfigs()

@@ -8,15 +8,15 @@ namespace DraegerConsole
 {
     public class NowTimestampUpdater : ITimestampUpdater
     {
-        public DateTime CurrentTimestamp { get; private set; }
+        public DateTime CurrentTimestamp { get; set; }
 
-        public DateTime PastTimestamp { get; private set; }
+        public DateTime PastTimestamp { get; set; }
         private int offsetInSeconds;
-        public NowTimestampUpdater(int offsetInSeconds)
+        public NowTimestampUpdater(int offsetInSeconds, DateTime firstTimestamp)
         {
             this.offsetInSeconds = offsetInSeconds;
             CurrentTimestamp = DateTime.Now.AddSeconds(offsetInSeconds);
-            PastTimestamp = CurrentTimestamp;
+            PastTimestamp = firstTimestamp;
         }
 
 
