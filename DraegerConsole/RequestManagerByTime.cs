@@ -25,38 +25,8 @@ namespace DraegerConsole
         private ITimestampUpdater timestampUpdater;
         private TimestampHistoryManager historyManager;
 
-        //temporary timestamps 
-      //private DateTime[] temporaryDateTimes = new DateTime[]
-      //{
-      //    new DateTime(2023,6,8,12,30,0,DateTimeKind.Local),
-      //    new DateTime(2023,6,8,14,30,0,DateTimeKind.Local),
-      //    new DateTime(2023,6,8,16,30,0,DateTimeKind.Local),
-      //    new DateTime(2023,6,8,18,30,0,DateTimeKind.Local),
-      //    new DateTime(2023,6,8,13,10,0,DateTimeKind.Local),
-      //    new DateTime(2023,6,8,13,20,0,DateTimeKind.Local),
-      //    new DateTime(2023,6,8,13,30,0,DateTimeKind.Local),
-      //    new DateTime(2023,6,8,13,40,0,DateTimeKind.Local),
-      //    new DateTime(2023,6,8,13,50,0,DateTimeKind.Local),
-      //    new DateTime(2023,6,8,14,00,0,DateTimeKind.Local),
-      //    new DateTime(2023,6,8,14,10,0,DateTimeKind.Local),
-      //    new DateTime(2023,6,8,14,20,0,DateTimeKind.Local),
-      //    new DateTime(2023,6,8,14,30,0,DateTimeKind.Local),
-      //    new DateTime(2023,6,8,14,40,0,DateTimeKind.Local),
-      //    new DateTime(2023,6,8,14,50,0,DateTimeKind.Local),
-      //    new DateTime(2023,6,8,15,00,0,DateTimeKind.Local),
-      //    new DateTime(2023,5,10,9,30,0,DateTimeKind.Local),
-      //    new DateTime(2023,5,10,9,40,0,DateTimeKind.Local),
-      //    new DateTime(2023,5,10,9,50,0,DateTimeKind.Local),
-      //    new DateTime(2023,5,10,10,0,0,DateTimeKind.Local),
-      //    new DateTime(2023,5,10,10,10,0,DateTimeKind.Local),
-      //    new DateTime(2023,5,10,10,20,0,DateTimeKind.Local),
-      //    new DateTime(2023,5,10,10,30,0,DateTimeKind.Local),
-      //    new DateTime(2023,5,10,10,40,0,DateTimeKind.Local),
-      //    new DateTime(2023,5,10,10,50,0,DateTimeKind.Local),
-      //    new DateTime(2023,5,10,11,0,0,DateTimeKind.Local)
-      //
-      //
-      //};
+     //temporary timestamps 
+     //private DateTime[] temporaryDateTimes = 
 
         public RequestManagerByTime(
             int delay, 
@@ -67,7 +37,7 @@ namespace DraegerConsole
             this.delay = delay;     
             this.timestampUpdater = timestampUpdater;
             this.historyManager = historyManager;
-            this.timestampUpdater.PastTimestamp = historyManager.History!.Units.Last().To;
+            //this.timestampUpdater.PastTimestamp = historyManager.History!.Units.Last().To;
         }
         private void SetTimer()
         {
@@ -89,7 +59,7 @@ namespace DraegerConsole
         private readonly DateTime defaultStartTimestamp = new DateTime(1990, 1, 1, 0, 0, 0);
         private void BuildJson()
         {
-            SetUpTimestamps();
+           
             hospitalProvider = new DraegerHospitalProvider(
                 connectionConfiguration!.Certificate,
                 connectionConfiguration.CertificateFilePassword,
@@ -99,6 +69,7 @@ namespace DraegerConsole
                 connectionConfiguration.DomainId,
                 timestampUpdater.PastTimestamp,
                 timestampUpdater.CurrentTimestamp
+
             );
 
 
@@ -120,6 +91,7 @@ namespace DraegerConsole
                 }
             );
             historyManager.Save();
+            SetUpTimestamps();
 
         }
 

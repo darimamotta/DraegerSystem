@@ -17,7 +17,7 @@ namespace DraegerJson
         { 
             get 
             {
-                return Id.Length == 0;
+                return Id.Length > 0;
             } 
         }
     }

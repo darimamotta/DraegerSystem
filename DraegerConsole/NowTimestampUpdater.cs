@@ -23,7 +23,7 @@ namespace DraegerConsole
         public void UpdateTimestamps()
         {
             PastTimestamp = CurrentTimestamp;
-            CurrentTimestamp = DateTime.Now;
+            CurrentTimestamp = DateTime.Now.AddSeconds(offsetInSeconds);
 
         }
     }

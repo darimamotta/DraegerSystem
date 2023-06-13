@@ -9,6 +9,7 @@ namespace DraegerJson
     public class ArrivalSick
     {
         public string Id { get; set; } = "";
+        public string AufnahmeNR { get; set; } = "";
         public List <Operation> Procedures { get; set; } = new List<Operation>();
         
     }

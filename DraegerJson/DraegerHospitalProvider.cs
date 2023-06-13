@@ -97,9 +97,38 @@ namespace DraegerJson
             ArrivalSick patient = new ArrivalSick { Id = p.CaseID };
             var proc = BuildProcedure(patient, clapp, p);
             if (proc.Exist)
+            {
+                BuildPatientId(clapp,p,patient);
+                BuildPatientAufnahmeNr(clapp,p,patient);
                 BuildTimestampsByProcedure(clapp, p, proc);
+
+            }
+                
             clapp.ReleasePatient();
             return patient;
+        }
+
+        private void BuildPatientId(CLAPP clapp, Patient p, ArrivalSick patient)
+        {
+            string template = CreatePatientIdTemplate();
+            var pt = clapp.ParseTemplate(
+                p.CaseID,
+                template,
+                fromTimestamp,
+                toTimestamp
+            );
+            patient.Id = pt.TextResult;
+        }
+        private void BuildPatientAufnahmeNr(CLAPP clapp, Patient p, ArrivalSick patient)
+        {
+            string template = CreatePatientAufnahmeNrTemplate();
+            var pt = clapp.ParseTemplate(
+                p.CaseID,
+                template,
+                fromTimestamp,
+                toTimestamp
+            );
+            patient.AufnahmeNR = pt.TextResult;
         }
 
         private void BuildTimestampsByProcedure(CLAPP clapp, Patient p, Operation proc)
@@ -186,8 +215,8 @@ namespace DraegerJson
                $"Range=CTX...CTX; " +
                $"ExternalIDType=SNOMED; " +
                $"ExternalID={snomedID}; " +
-               $"[CurrentHISPatientID];"+
-               $"[Pat: Property = Aufnahme_NR];"+
+               //$"[CurrentHISPatientID];"+
+              // $"[Pat: Property = Aufnahme_NR];"+
                $"Format=!({{AdminDate}})~];";
            
            return t;
@@ -210,6 +239,15 @@ namespace DraegerJson
         private string CreateProcedureTemplate ()
         {
             return "[PreOP: Format=!({OP_ID})]";
+        }
+        private string CreatePatientIdTemplate()
+        {
+            return "[CurrentHISPatientID]";
+        }
+        private string CreatePatientAufnahmeNrTemplate() 
+        {
+            return "[HISPatient: Property = Aufnahme_NR]";
+            
         }
     }
 }
