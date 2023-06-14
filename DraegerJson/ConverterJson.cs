@@ -8,6 +8,7 @@ using Hl7.Fhir.Serialization;
 using System.Text.Json;
 using FhirTypes = Hl7.Fhir.ElementModel.Types;
 using System.IO;
+using Hl7.Fhir.Utility;
 
 namespace DraegerJson
 {
@@ -80,7 +81,10 @@ namespace DraegerJson
         {
             ResourceReference sub = new ResourceReference();
             sub.Reference = $"Patient/{pat.Id}";
+            sub.Display = pat.FullName ;
             p.Subject = sub;
+            
+            
         }
 
         private static void CreateCoding(Parameter param, Procedure p)

@@ -100,13 +100,17 @@ namespace DraegerJson
             {
                 BuildPatientId(clapp,p,patient);
                 BuildPatientAufnahmeNr(clapp,p,patient);
+                BuildPatientFullName(clapp,p,patient);
+                BuildPatientLocation(clapp,p,patient);
                 BuildTimestampsByProcedure(clapp, p, proc);
 
+               
             }
                 
             clapp.ReleasePatient();
             return patient;
         }
+
 
         private void BuildPatientId(CLAPP clapp, Patient p, ArrivalSick patient)
         {
@@ -122,13 +126,40 @@ namespace DraegerJson
         private void BuildPatientAufnahmeNr(CLAPP clapp, Patient p, ArrivalSick patient)
         {
             string template = CreatePatientAufnahmeNrTemplate();
-            var pt = clapp.ParseTemplate(
+            var pt1 = clapp.ParseTemplate(
                 p.CaseID,
                 template,
                 fromTimestamp,
                 toTimestamp
             );
-            patient.AufnahmeNR = pt.TextResult;
+            patient.AufnahmeNR = pt1.TextResult;
+        }
+
+        private void BuildPatientFullName(CLAPP clapp, Patient p, ArrivalSick patient)
+        {
+                   
+            PatientDemographics pd = clapp.GetPatientDemographics(p.CaseID); 
+            patient.FullName = pd.PatientName;           
+
+        }
+
+        private void BuildPatientLocation(CLAPP clapp, Patient p, ArrivalSick patient)
+        {
+            string template = CreatePatientLocationTemplate();
+            var pt1 = clapp.ParseTemplate(
+                p.CaseID,
+                template,
+                fromTimestamp,
+                toTimestamp
+            );
+            patient.Location = pt1.TextResult;
+        }
+
+        private string CreatePatientLocationTemplate()
+        {
+            return "[PatWard: Property=Workstation.Name]";
+            //return "[Pat: Property=CareOU]";
+            //return "[Pat: Property=K_PLZ, K_Ort]";
         }
 
         private void BuildTimestampsByProcedure(CLAPP clapp, Patient p, Operation proc)
@@ -246,8 +277,11 @@ namespace DraegerJson
         }
         private string CreatePatientAufnahmeNrTemplate() 
         {
-            return "[HISPatient: Property = Aufnahme_NR]";
-            
+            //return "[HISPatient: Property = Aufnahme_NR]";
+            //return "[Pat: Property = Aufnahme_NR]";
+            return "[Pat: Property=Aufnahme_NR]";
+           
+
         }
     }
 }

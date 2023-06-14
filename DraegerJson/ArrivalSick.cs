@@ -10,6 +10,9 @@ namespace DraegerJson
     {
         public string Id { get; set; } = "";
         public string AufnahmeNR { get; set; } = "";
+        public string FullName { get; set; } = "";
+        public string Location { get; set; } = "";
+
         public List <Operation> Procedures { get; set; } = new List<Operation>();
         
     }
