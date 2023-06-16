@@ -18,15 +18,19 @@ namespace DraegerJson
     public class ConverterJson : IConverterJson
     {
         private Hospital? currentHospital;
-        public string Convert(Hospital hospital)
+        public Dictionary<string, string> Convert(Hospital hospital)
         {
+            Dictionary<string,string> result = new Dictionary<string,string>();
             currentHospital = hospital;
-            Bundle bundle = CreateNewBundle(hospital);
+            
             foreach (ArrivalSick pat in hospital.Patients)
             {
+                Bundle bundle = CreateNewBundle(hospital);
                 AddPatientToBundle(bundle, pat);
+                result.Add(pat.Id, CreateJsonFromBundle(bundle));
+                
             }
-            return CreateJsonFromBundle(bundle);        
+            return result;        
         }
 
         private string CreateJsonFromBundle(Bundle bundle)
@@ -37,11 +41,74 @@ namespace DraegerJson
 
         private void AddPatientToBundle(Bundle bundle, ArrivalSick pat)
         {
+            AddListOfProcedures(bundle, pat);
             foreach (Operation op in pat.Procedures)
             {
                 if (op.Exist)
                     AddProcedureToBundle(bundle, pat, op);
             }
+        }
+
+        private void AddListOfProcedures(Bundle bundle, ArrivalSick pat)
+        {
+            List list = CreateEmptyList(pat);
+            FillingListOfProcedures(pat, list);
+            bundle.Entry.Add(new Bundle.EntryComponent { Resource = list, FullUrl = "https://srv-orchestra/List/1" });
+
+        }
+
+
+        private static void FillingListOfProcedures(ArrivalSick pat, List list)
+        {
+            foreach (Operation op in pat.Procedures)
+            {
+                if (op.Exist)
+                    list.Entry.Add(
+                        new List.EntryComponent
+                        {
+                            Item = new ResourceReference
+                            {
+                                Reference = "Procedure/" + op.Id
+                            }
+                        }
+                    );
+            }
+        }
+
+        private List CreateEmptyList(ArrivalSick pat)
+        {
+            List list = new List();
+            list.Id = "example";
+            list.Status = List.ListStatus.Current;
+            list.Mode = ListMode.Snapshot;
+            
+
+            list.Code = CreateMillestoneProcedureConcept();
+            list.Subject = new ResourceReference
+            {
+                Reference = "Patient/" + pat.Id
+
+            };
+            list.Source = new ResourceReference
+            {
+                Reference = "Practitioner/EXTICM"
+            };
+            return list;
+
+        }
+        private static  CodeableConcept CreateMillestoneProcedureConcept()
+        {
+            
+            CodeableConcept codeableConcept = new CodeableConcept();
+            codeableConcept.Coding.Add(
+                new Coding
+                {
+                    System = "http://snomed.info/sct",
+                    Code = "397788003",
+                    Display = "Procedure milestone (observable entity)"
+                }
+            );
+            return codeableConcept;
         }
 
         private void AddProcedureToBundle(Bundle bundle, ArrivalSick pat, Operation op)
@@ -66,16 +133,21 @@ namespace DraegerJson
         {
             var first_entry = new Bundle.EntryComponent();
             first_entry.Resource = p;
+            first_entry.FullUrl = "https://srv-orchestra/Procedure/" + p.Id;
             bundle.Entry.Add(first_entry);
+            
         }
 
         private static Procedure CreateProcedure(Operation op)
         {
             Procedure p = new Procedure();
             p.Id = "Procedure/"+op.Id;
-            p.Category = new CodeableConcept();
+            //p.Category = new CodeableConcept();
+            p.Code = new CodeableConcept();
+            
             return p;
         }
+      
 
         private static void CreateSubject(ArrivalSick pat, Procedure p)
         {
@@ -93,7 +165,10 @@ namespace DraegerJson
             coding.System = "http://snomed.info/sct";
             coding.Code = param.Id;
             coding.Display = param.Name;
-            p.Category.Coding.Add(coding);
+            p.Code.Coding.Add(coding);
+            p.Category = CreateMillestoneProcedureConcept();
+            
+            
         }
 
         private static void CreatePeriod(Parameter param, Procedure p)
@@ -101,12 +176,14 @@ namespace DraegerJson
             Period period = new Period();
             period.Start = param.Date.ToString("yyyy-MM-ddTHH:mm:sszzz");
             period.End = param.Date.ToString("yyyy-MM-ddTHH:mm:sszzz");
+            
             p.Performed = period;
+            
         }
         private static void CreateRecorder(Parameter param, Procedure p)
         {
             ResourceReference sub = new ResourceReference();
-            sub.Reference = "Technical User/EXTMON";
+            sub.Reference = "Practitioner/EXTICM";
             p.Recorder = sub;
         }
         private Bundle CreateNewBundle(Hospital hospital)

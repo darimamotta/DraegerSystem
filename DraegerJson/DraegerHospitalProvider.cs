@@ -157,9 +157,14 @@ namespace DraegerJson
 
         private string CreatePatientLocationTemplate()
         {
-            return "[PatWard: Property=Workstation.Name]";
+
+            return "[PreOP: Format=!({OP_Location})]";
+             //[WardName]  mandant name 
+             //return "[PatWard: Property=Workstation.Name]";
+            //return "[PatWard:Property=Bed.Position]";
             //return "[Pat: Property=CareOU]";
             //return "[Pat: Property=K_PLZ, K_Ort]";
+           
         }
 
         private void BuildTimestampsByProcedure(CLAPP clapp, Patient p, Operation proc)
@@ -248,7 +253,7 @@ namespace DraegerJson
                $"ExternalID={snomedID}; " +
                //$"[CurrentHISPatientID];"+
               // $"[Pat: Property = Aufnahme_NR];"+
-               $"Format=!({{AdminDate}})~];";
+               $"Format=!({{AdminDate}};)~];";
            
            return t;
        

@@ -8,6 +8,6 @@ namespace DraegerJson
 {
     public interface IConverterJson
     {
-        string Convert(Hospital hospital);
+        Dictionary<string,string> Convert(Hospital hospital);
     }
 }

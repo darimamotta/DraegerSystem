@@ -73,14 +73,20 @@ namespace DraegerConsole
             );
 
 
-            IJsonProcessor jsonProcessor = new FileJsonProcessor("data/stamp_" + timestampUpdater.CurrentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss") + ".json");
+           
             ConverterJson converterJson = new ConverterJson();
             Console.WriteLine("Process from {0} to {1}...", timestampUpdater.PastTimestamp.ToString("yyyy.MM.dd_HH.mm.ss"), timestampUpdater.CurrentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss"));
             Hospital? hospital = hospitalProvider!.GetHospital();
             if (hospital != null)
             {
                 hospital.Timestamp = timestampUpdater.CurrentTimestamp;
-                jsonProcessor.ProcessJson(converterJson.Convert(hospital));
+                var jsons = converterJson.Convert(hospital);
+                foreach (var pId in  jsons.Keys) 
+                {
+                    IJsonProcessor jsonProcessor = new FileJsonProcessor("data/patId_"+pId+"_stamp_" + timestampUpdater.CurrentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss") + ".json");
+                    jsonProcessor.ProcessJson(jsons[pId]);
+                }
+                
             }
             Console.WriteLine("OK. Enter 'Exit' for Stop ");
             historyManager.History!.Units.Add(
