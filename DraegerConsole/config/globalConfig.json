@@ -1,5 +1,5 @@
 {
-  "DelayBetweenRequestsInMilliseconds": 15000,
-  "TimestampsOffsetInSeconds": -7200
+  "DelayBetweenRequestsInMilliseconds": 60000,
+  "TimestampsOffsetInSeconds": 0
 
 }

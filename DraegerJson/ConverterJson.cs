@@ -145,6 +145,7 @@ namespace DraegerJson
             //p.Category = new CodeableConcept();
             p.Code = new CodeableConcept();
             
+            
             return p;
         }
       
@@ -155,6 +156,7 @@ namespace DraegerJson
             sub.Reference = $"Patient/{pat.Id}";
             sub.Display = pat.FullName ;
             p.Subject = sub;
+          
             
             
         }
@@ -169,6 +171,7 @@ namespace DraegerJson
             p.Category = CreateMillestoneProcedureConcept();
             
             
+            
         }
 
         private static void CreatePeriod(Parameter param, Procedure p)
@@ -176,10 +179,13 @@ namespace DraegerJson
             Period period = new Period();
             period.Start = param.Date.ToString("yyyy-MM-ddTHH:mm:sszzz");
             period.End = param.Date.ToString("yyyy-MM-ddTHH:mm:sszzz");
+           
             
             p.Performed = period;
             
+            
         }
+     
         private static void CreateRecorder(Parameter param, Procedure p)
         {
             ResourceReference sub = new ResourceReference();
