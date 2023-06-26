@@ -4,5 +4,11 @@
   "ClappId": "Clapp1",
   "ServerHostName": "SRVDEMOICM05V.DRAEGER.DEMO.CH",
   "DomainId": "clappathon",
-  "ServerPort": 25000
+  "ServerPort": 25000,
+  "DelayBetweenRequestsInMilliseconds": 10000,
+  "TimestampsOffsetInSeconds": 0,
+  "PathToJsonFiles": "data",
+  "PathToHistory": "history"
+
+
 }

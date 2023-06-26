@@ -14,10 +14,10 @@ using DraegerConsole.exceptions;
 
 class Program
 {
-    private static GlobalConfiguration? globConfiguration;
+    private static AppConfiguration? appConfig;
     private static TimestampHistoryManager? historyManager;
     private static ITimestampUpdater? timestampUpdater;
-    private const string PathToHistory = "history/history.json";
+    
     private static void ProcessError(Exception ex)
     {
         Console.WriteLine(ex.ToString());
@@ -29,13 +29,13 @@ class Program
         
         try
         {
-            ReadConfigs();
+            ReadConfiguration();
             historyManager = BuildHistoryManager();
             timestampUpdater = BuildTimestampUpdater();
             RequestManagerByTime request = new RequestManagerByTime(
-                globConfiguration!.DelayBetweenRequestsInMilliseconds, 
                 timestampUpdater, 
-                historyManager
+                historyManager,
+                appConfig!
             );
             request.StartRequests();
         }
@@ -49,16 +49,11 @@ class Program
 
     private static TimestampHistoryManager BuildHistoryManager()
     {
-        TimestampHistoryManager thm = new TimestampHistoryManager(PathToHistory);
-        if (File.Exists(PathToHistory))
-        {
-            thm.Load();
-        }
+        TimestampHistoryManager thm = new TimestampHistoryManager(appConfig!.PathToHistory+"/history.json");
+        if (File.Exists(appConfig!.PathToHistory + "/history.json"))        
+            thm.Load();        
         else 
-        { 
-            DateTime start = ReadTimestampFromConsole();
-            thm.Initialize(start);          
-        }
+            thm.Initialize(ReadTimestampFromConsole());       
         return thm;
     }
     private static DateTime ReadTimestampFromConsole()
@@ -85,10 +80,10 @@ class Program
 
     private static ITimestampUpdater BuildTimestampUpdater()
     {
-        //    return new NowTimestampUpdater(
-        //        globConfiguration!.TimestampsOffsetInSeconds,
-        //        historyManager!.History!.Units.Last().To
-        //    );
+              // return new NowTimestampUpdater(
+              //appConfig!.TimestampsOffsetInSeconds,
+              // historyManager!.History!.Units.Last().To
+           // );
         return new FromArrayTimestampUpdater(new DateTime[]
          {
 
@@ -124,10 +119,17 @@ class Program
           });
     }
 
-    private static void ReadConfigs()
+  
+    private static void ReadConfiguration()
     {
-        globConfiguration = JsonSerializer.Deserialize<GlobalConfiguration>(File.ReadAllText("config/globalConfig.json"));
-        
+        if (!File.Exists("config/appConfig.json"))
+        {
+            Console.WriteLine("Configuration File not found");
+            System.Environment.Exit(1);
+        }
+        appConfig = JsonSerializer.Deserialize<AppConfiguration>(File.ReadAllText("config/appConfig.json"));
+        if (appConfig == null)
+            throw new ReadConfigException("Configuration creation failed");      
     }
 }
 

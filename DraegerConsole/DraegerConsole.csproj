@@ -32,10 +32,7 @@
 	  <PackageReference Include="Hl7.Fhir.R4" Version="5.1.0" />
 	</ItemGroup>
 	<ItemGroup>
-	  <None Update="config\connectionConfig.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Update="config\globalConfig.json">
+	  <None Update="config\appConfig.json">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>

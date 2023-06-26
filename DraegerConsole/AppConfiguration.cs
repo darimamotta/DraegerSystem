@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DraegerConsole
 {
-    internal class ConnectionConfiguration
+    public class AppConfiguration
     {
         public string Certificate { get; set; } = string.Empty;
         public string CertificateFilePassword { get; set; } = string.Empty;
@@ -14,5 +14,9 @@ namespace DraegerConsole
         public string ServerHostName { get; set; } = string.Empty;
         public string DomainId { get; set; } = string.Empty;
         public int ServerPort { get; set; }
+        public int DelayBetweenRequestsInMilliseconds { get; set; }
+        public int TimestampsOffsetInSeconds { get; set; }
+        public string PathToJsonFiles { get; set; } = string.Empty;
+        public string PathToHistory { get;set; } = string.Empty;
     }
 }

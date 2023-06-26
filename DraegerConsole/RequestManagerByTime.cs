@@ -19,9 +19,8 @@ namespace DraegerConsole
     public class RequestManagerByTime
     {
         private System.Timers.Timer? timer;
-        private ConnectionConfiguration? connectionConfiguration;
-        //private GlobalConfiguration? globalConfiguration;
-        private int delay;
+        private AppConfiguration? appConfig;
+        //private GlobalConfiguration? globalConfiguration;      
         private ITimestampUpdater timestampUpdater;
         private TimestampHistoryManager historyManager;
 
@@ -29,25 +28,34 @@ namespace DraegerConsole
      //private DateTime[] temporaryDateTimes = 
 
         public RequestManagerByTime(
-            int delay, 
             ITimestampUpdater timestampUpdater, 
-            TimestampHistoryManager historyManager
+            TimestampHistoryManager historyManager,
+            AppConfiguration appConfig
         )
         {
-            this.delay = delay;     
+            this.appConfig = appConfig;
             this.timestampUpdater = timestampUpdater;
             this.historyManager = historyManager;
             //this.timestampUpdater.PastTimestamp = historyManager.History!.Units.Last().To;
         }
         private void SetTimer()
         {
-            timer = new System.Timers.Timer(delay);
+            timer = new System.Timers.Timer(appConfig!.DelayBetweenRequestsInMilliseconds);
             timer.Elapsed += BuildJsonHandler;
             timer.AutoReset = true;
             timer.Enabled = true;
             
         }
 
+        private void SetUp()
+
+        { 
+            SetTimer();
+            if(!Directory.Exists(appConfig!.PathToJsonFiles))
+            {
+                Directory.CreateDirectory(appConfig!.PathToJsonFiles);
+            }
+        }
         private void BuildJsonHandler(object? sender, ElapsedEventArgs e)
         {
             BuildJson();
@@ -61,19 +69,19 @@ namespace DraegerConsole
         {
            
             hospitalProvider = new DraegerHospitalProvider(
-                connectionConfiguration!.Certificate,
-                connectionConfiguration.CertificateFilePassword,
-                connectionConfiguration.ClappId,
-                connectionConfiguration.ServerHostName,
-                connectionConfiguration.ServerPort,
-                connectionConfiguration.DomainId,
+                appConfig!.Certificate,
+                appConfig.CertificateFilePassword,
+                appConfig.ClappId,
+                appConfig.ServerHostName,
+                appConfig.ServerPort,
+                appConfig.DomainId,
                 timestampUpdater.PastTimestamp,
                 timestampUpdater.CurrentTimestamp
 
             );
 
 
-           
+            string path = appConfig.PathToJsonFiles;
             ConverterJson converterJson = new ConverterJson();
             Console.WriteLine("Process from {0} to {1}...", timestampUpdater.PastTimestamp.ToString("yyyy.MM.dd_HH.mm.ss"), timestampUpdater.CurrentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss"));
             Hospital? hospital = hospitalProvider!.GetHospital();
@@ -83,7 +91,7 @@ namespace DraegerConsole
                 var jsons = converterJson.Convert(hospital);
                 foreach (var pId in  jsons.Keys) 
                 {
-                    IJsonProcessor jsonProcessor = new FileJsonProcessor("data/patId_"+pId+"_stamp_" + timestampUpdater.CurrentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss") + ".json");
+                    IJsonProcessor jsonProcessor = new FileJsonProcessor(path+"/patId_"+pId+"_stamp_" + timestampUpdater.CurrentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss") + ".json");
                     jsonProcessor.ProcessJson(jsons[pId]);
                 }
                 
@@ -107,25 +115,16 @@ namespace DraegerConsole
             timestampUpdater.UpdateTimestamps();           
         }
 
-        private static ConnectionConfiguration? ReadConfiguration()
-        {
-            if (!File.Exists("config/connectionConfig.json"))
-            {
-                Console.WriteLine("Configuration File not found");
-                System.Environment.Exit(1);
-            }
-            return
-            JsonSerializer.Deserialize<ConnectionConfiguration>(File.ReadAllText("config/connectionConfig.json"));
-        }
+       
         public void StartRequests()
         {
                      
-            connectionConfiguration = ReadConfiguration();
-            if (connectionConfiguration == null)
-                throw new ReadConfigException("Configuration creation failed");           
-            BuildJson();
-            SetTimer();            
+           
+            
             Console.WriteLine("Application started at " + DateTime.Now);
+            BuildJson();
+            SetUp();            
+            
             Console.WriteLine("Enter 'Exit' for stop application");
             do
             {

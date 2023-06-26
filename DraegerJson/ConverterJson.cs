@@ -133,7 +133,7 @@ namespace DraegerJson
         {
             var first_entry = new Bundle.EntryComponent();
             first_entry.Resource = p;
-            first_entry.FullUrl = "https://srv-orchestra/Procedure/" + p.Id;
+            first_entry.FullUrl = "https://srv-orchestra/" + p.Id;
             bundle.Entry.Add(first_entry);
             
         }
