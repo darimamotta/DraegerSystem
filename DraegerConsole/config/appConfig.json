@@ -8,7 +8,8 @@
   "DelayBetweenRequestsInMilliseconds": 10000,
   "TimestampsOffsetInSeconds": 0,
   "PathToJsonFiles": "data",
-  "PathToHistory": "history"
+  "PathToHistory": "history",
+  "HistoryTimeInMinutes": 60
 
 
 }

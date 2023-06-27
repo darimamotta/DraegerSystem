@@ -118,7 +118,7 @@ namespace DraegerJson
                 BuildPatientAufnahmeNr(clapp,p,patient);
                 BuildPatientFullName(clapp,p,patient);
                 BuildPatientLocation(clapp,p,patient);
-                BuildTimestampsByProcedure(clapp, p, proc);
+                BuildTimestampsByProcedure(clapp, p, proc, patient);
 
                
             }
@@ -183,7 +183,7 @@ namespace DraegerJson
            
         }
 
-        private void BuildTimestampsByProcedure(CLAPP clapp, Patient p, Operation proc)
+        private void BuildTimestampsByProcedure(CLAPP clapp, Patient p, Operation proc, ArrivalSick patient)
         {
             foreach (var snomedID in snomedIDs)
             {
@@ -194,7 +194,7 @@ namespace DraegerJson
                     fromTimestamp,
                     toTimestamp
                 );
-                BuildParameterFromTemplate(proc, pt, snomedID);
+                BuildParameterFromTemplate(proc, pt, snomedID, patient);
 
             }
         }
@@ -215,7 +215,7 @@ namespace DraegerJson
         }
 
 
-        private void BuildParameterFromTemplate(Operation proc, ParseTemplate pt, SnomedParameter param)
+        private void BuildParameterFromTemplate(Operation proc, ParseTemplate pt, SnomedParameter param, ArrivalSick patient)
         {
             var tokens = pt.TextResult.Split(';', StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < tokens.Length; i++) 
@@ -225,7 +225,8 @@ namespace DraegerJson
                     {
                         Id = param.Id,
                         Name = param.Name,
-                        Date = DateTime.Parse(tokens[i])
+                        Date = DateTime.Parse(tokens[i]),
+                        PatientId = patient.Id
                     }
                 ); 
             }

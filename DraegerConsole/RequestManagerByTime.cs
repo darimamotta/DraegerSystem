@@ -23,9 +23,10 @@ namespace DraegerConsole
         //private GlobalConfiguration? globalConfiguration;      
         private ITimestampUpdater timestampUpdater;
         private TimestampHistoryManager historyManager;
+        private DraegerJson.ParameterHistory parameterHistory;
 
-     //temporary timestamps 
-     //private DateTime[] temporaryDateTimes = 
+        //temporary timestamps 
+        //private DateTime[] temporaryDateTimes = 
 
         public RequestManagerByTime(
             ITimestampUpdater timestampUpdater, 
@@ -35,8 +36,8 @@ namespace DraegerConsole
         {
             this.appConfig = appConfig;
             this.timestampUpdater = timestampUpdater;
-            this.historyManager = historyManager;
-            //this.timestampUpdater.PastTimestamp = historyManager.History!.Units.Last().To;
+            this.historyManager = historyManager;            
+            this.parameterHistory = new DraegerJson.ParameterHistory();
         }
         private void SetTimer()
         {
@@ -82,20 +83,22 @@ namespace DraegerConsole
 
 
             string path = appConfig.PathToJsonFiles;
-            ConverterJson converterJson = new ConverterJson();
+            ConverterJson converterJson = new ConverterJson(parameterHistory);
             Console.WriteLine("Process from {0} to {1}...", timestampUpdater.PastTimestamp.ToString("yyyy.MM.dd_HH.mm.ss"), timestampUpdater.CurrentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss"));
             Hospital? hospital = hospitalProvider!.GetHospital();
             if (hospital != null)
             {
                 hospital.Timestamp = timestampUpdater.CurrentTimestamp;
+                               
                 var jsons = converterJson.Convert(hospital);
                 foreach (var pId in  jsons.Keys) 
                 {
                     IJsonProcessor jsonProcessor = new FileJsonProcessor(path+"/patId_"+pId+"_stamp_" + timestampUpdater.CurrentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss") + ".json");
-                    jsonProcessor.ProcessJson(jsons[pId]);
-                }
-                
+                    jsonProcessor.ProcessJson(jsons[pId]);             
+                }                
             }
+            DateTime cutOffDate = timestampUpdater.CurrentTimestamp.AddMinutes(-appConfig.HistoryTimeInMinutes);
+            parameterHistory.RemoveOld(cutOffDate);
             Console.WriteLine("OK. Enter 'Exit' for Stop ");
             historyManager.History!.Units.Add(
                 new TimestampHistoryUnit 

@@ -18,5 +18,6 @@ namespace DraegerConsole
         public int TimestampsOffsetInSeconds { get; set; }
         public string PathToJsonFiles { get; set; } = string.Empty;
         public string PathToHistory { get;set; } = string.Empty;
+        public int HistoryTimeInMinutes { get; set; }
     }
 }

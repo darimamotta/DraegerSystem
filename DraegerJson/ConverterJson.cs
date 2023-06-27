@@ -18,6 +18,7 @@ namespace DraegerJson
     public class ConverterJson : IConverterJson
     {
         private Hospital? currentHospital;
+        private ParameterHistory history;
         public Dictionary<string, string> Convert(Hospital hospital)
         {
             Dictionary<string,string> result = new Dictionary<string,string>();
@@ -31,6 +32,11 @@ namespace DraegerJson
                 
             }
             return result;        
+        }
+        public ConverterJson(ParameterHistory history)
+        {
+            this.history = history;
+
         }
 
         private string CreateJsonFromBundle(Bundle bundle)
@@ -115,7 +121,11 @@ namespace DraegerJson
         {  
             foreach (Parameter param in op.Params)
             {
-                AddParamToProcedure(param, pat, op, bundle);
+                if (!history.Contains(param))
+                {
+                    AddParamToProcedure(param, pat, op, bundle);
+                    history.Add(param);
+                }                
             }  
         }
 
