@@ -19,6 +19,8 @@ namespace DraegerJson
     {
         private Hospital? currentHospital;
         private ParameterHistory history;
+      
+
         public Dictionary<string, string> Convert(Hospital hospital)
         {
             Dictionary<string,string> result = new Dictionary<string,string>();
@@ -136,7 +138,20 @@ namespace DraegerJson
             CreatePeriod(param, p);
             CreateCoding(param, p);
             CreateRecorder(param, p);
+            CreatePartOf(op, p);
+            CreateStatus(p);
             AddProcedureToBundle(bundle, p);
+        }
+
+        private void CreateStatus(Procedure p)
+        {
+            p.Status = EventStatus.Completed;
+        }
+
+        private void CreatePartOf(Operation op, Procedure p)
+        {
+            p.PartOf = new List<ResourceReference>();
+            p.PartOf.Add(new ResourceReference() { Reference = op.Id });
         }
 
         private static void AddProcedureToBundle(Bundle bundle, Procedure p)
@@ -189,8 +204,8 @@ namespace DraegerJson
             Period period = new Period();
             period.Start = param.Date.ToString("yyyy-MM-ddTHH:mm:sszzz");
             period.End = param.Date.ToString("yyyy-MM-ddTHH:mm:sszzz");
-           
-            
+
+            //FhirTypes.DateTime datatimenew = FhirTypes.DateTime.Parse(param.Date.ToString("yyyy-MM-ddTHH:mm:sszzz"));
             p.Performed = period;
             
             
