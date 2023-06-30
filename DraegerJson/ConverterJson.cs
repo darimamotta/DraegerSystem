@@ -49,12 +49,15 @@ namespace DraegerJson
 
         private void AddPatientToBundle(Bundle bundle, ArrivalSick pat)
         {
-            AddListOfProcedures(bundle, pat);
+            List list = CreateEmptyList(pat);
+            //AddListOfProcedures(bundle, pat);
             foreach (Operation op in pat.Procedures)
             {
                 if (op.Exist)
-                    AddProcedureToBundle(bundle, pat, op);
+                    AddProcedureToBundle(bundle, pat, op, list);
             }
+            bundle.Entry.Insert(0, new Bundle.EntryComponent { Resource = list, FullUrl = "https://srv-orchestra/List/1" });
+                
         }
 
         private void AddListOfProcedures(Bundle bundle, ArrivalSick pat)
@@ -91,7 +94,7 @@ namespace DraegerJson
             list.Mode = ListMode.Snapshot;
             
 
-            list.Code = CreateMillestoneProcedureConcept();
+            list.Code = CreateMilestoneProcedureConcept();
             list.Subject = new ResourceReference
             {
                 Reference = "Patient/" + pat.Id
@@ -104,7 +107,7 @@ namespace DraegerJson
             return list;
 
         }
-        private static  CodeableConcept CreateMillestoneProcedureConcept()
+        private static  CodeableConcept CreateMilestoneProcedureConcept()
         {
             
             CodeableConcept codeableConcept = new CodeableConcept();
@@ -119,28 +122,28 @@ namespace DraegerJson
             return codeableConcept;
         }
 
-        private void AddProcedureToBundle(Bundle bundle, ArrivalSick pat, Operation op)
-        {  
+        private void AddProcedureToBundle(Bundle bundle, ArrivalSick pat, Operation op, List list)
+        {
             foreach (Parameter param in op.Params)
             {
                 if (!history.Contains(param))
                 {
-                    AddParamToProcedure(param, pat, op, bundle);
+                    AddParamToProcedure(param, pat, op, bundle, list);
                     history.Add(param);
                 }                
             }  
         }
 
-        private void AddParamToProcedure(Parameter param, ArrivalSick pat, Operation op,Bundle bundle)
+        private void AddParamToProcedure(Parameter param, ArrivalSick pat, Operation op,Bundle bundle, List list)
         {
-            Procedure p = CreateProcedure(op);
+            Procedure p = CreateProcedure(list, param);
             CreateSubject(pat, p);
             CreatePeriod(param, p);
             CreateCoding(param, p);
             CreateRecorder(param, p);
             CreatePartOf(op, p);
             CreateStatus(p);
-            AddProcedureToBundle(bundle, p);
+            AddProcedureToBundle(bundle, p,op,param);
         }
 
         private void CreateStatus(Procedure p)
@@ -151,29 +154,41 @@ namespace DraegerJson
         private void CreatePartOf(Operation op, Procedure p)
         {
             p.PartOf = new List<ResourceReference>();
-            p.PartOf.Add(new ResourceReference() { Reference = op.Id });
+            p.PartOf.Add(new ResourceReference() { Reference = "Procedure/"+op.Id });
         }
 
-        private static void AddProcedureToBundle(Bundle bundle, Procedure p)
+        private static void AddProcedureToBundle(Bundle bundle, Procedure p, Operation op, Parameter param)
         {
             var first_entry = new Bundle.EntryComponent();
             first_entry.Resource = p;
-            first_entry.FullUrl = "https://srv-orchestra/" + p.Id;
+            first_entry.FullUrl = "https://srv-orchestra/Procedure/" + op.Id+"/Milestone/"+param.Id;
             bundle.Entry.Add(first_entry);
             
         }
 
-        private static Procedure CreateProcedure(Operation op)
+        private static Procedure CreateProcedure(List list, Parameter param)
         {
             Procedure p = new Procedure();
-            p.Id = "Procedure/"+op.Id;
+            p.Id = param.Milestone;
             //p.Category = new CodeableConcept();
             p.Code = new CodeableConcept();
-            
-            
+
+            AddProcedureToList(p, list);
             return p;
         }
-      
+
+        private static void AddProcedureToList(Procedure p, List list)
+        {
+            list.Entry.Add(
+                new List.EntryComponent
+                {
+                    Item = new ResourceReference
+                    {
+                        Reference = p.Id
+                    }
+                }
+            );
+        }
 
         private static void CreateSubject(ArrivalSick pat, Procedure p)
         {
@@ -193,7 +208,7 @@ namespace DraegerJson
             coding.Code = param.Id;
             coding.Display = param.Name;
             p.Code.Coding.Add(coding);
-            p.Category = CreateMillestoneProcedureConcept();
+            p.Category = CreateMilestoneProcedureConcept();
             
             
             

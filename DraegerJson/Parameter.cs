@@ -13,6 +13,7 @@ namespace DraegerJson
         public string Name { get; set; } = "";
         public DateTime Date { get; set; }
         public string PatientId { get; set; } = "";
+        public string Milestone { get; set; } = string.Empty;
 
         public override int GetHashCode()
         {
