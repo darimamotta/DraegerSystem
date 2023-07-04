@@ -12,7 +12,7 @@ namespace DraegerJson
         public string AufnahmeNR { get; set; } = "";
         public string FullName { get; set; } = "";
         public string Location { get; set; } = "";
-
+        public DateTime OPDate { get; set; } 
         public List <Operation> Procedures { get; set; } = new List<Operation>();
         
     }

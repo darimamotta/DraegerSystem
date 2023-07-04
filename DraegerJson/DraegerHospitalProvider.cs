@@ -32,6 +32,7 @@ namespace DraegerJson
             DateTime fromTimestamp,
             DateTime toTimestamp
            
+           
         ) 
         {
             this.certificate = certificate;
@@ -42,6 +43,7 @@ namespace DraegerJson
             this.serverPort = serverPort;
             this.fromTimestamp = fromTimestamp;
             this.toTimestamp = toTimestamp;
+          
             
         }
         public CLAPPConfiguration CreateConfig()
@@ -120,6 +122,7 @@ namespace DraegerJson
                 BuildPatientFullName(clapp,p,patient);
                 BuildPatientLocation(clapp,p,patient);
                 BuildTimestampsByProcedure(clapp, p, proc, patient);
+                BuildPatientOP(clapp,p,patient);
 
                
             }
@@ -150,6 +153,19 @@ namespace DraegerJson
                 toTimestamp
             );
             patient.AufnahmeNR = pt1.TextResult;
+        }
+        private void BuildPatientOP(CLAPP clapp, Patient p, ArrivalSick patient)
+        {
+           string template = CreateOPDate();
+            var pt3 = clapp.ParseTemplate(
+                p.CaseID,
+                template,
+                fromTimestamp,
+                toTimestamp
+            );
+            string opdate = pt3.TextResult.ToString();
+           patient.OPDate = DateTime.Parse(opdate);
+
         }
 
         private void BuildPatientFullName(CLAPP clapp, Patient p, ArrivalSick patient)
@@ -307,5 +323,13 @@ namespace DraegerJson
            
 
         }
+        private string CreateOPDate()
+        {
+            //return "[PreOP: Format=!(OP:{OP_Date}|PreOP:{PreOP_Date}|Created:{DateCreated})]";
+            return "[Pat:Property=AufnahmeDatum]";
+
+
+         }
     }
+            
 }
