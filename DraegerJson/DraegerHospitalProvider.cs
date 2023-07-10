@@ -119,10 +119,11 @@ namespace DraegerJson
             {
                 BuildPatientId(clapp,p,patient);
                 BuildPatientAufnahmeNr(clapp,p,patient);
-                BuildPatientFullName(clapp,p,patient);
+                BuildPatientFullName(clapp,p,patient);  
+                BuildPatientOP(clapp,p,patient);
                 BuildPatientLocation(clapp,p,patient);
                 BuildTimestampsByProcedure(clapp, p, proc, patient);
-                BuildPatientOP(clapp,p,patient);
+             
 
                
             }
@@ -138,7 +139,8 @@ namespace DraegerJson
             var pt = clapp.ParseTemplate(
                 p.CaseID,
                 template,
-                fromTimestamp,
+                patient.OPDate,
+                //fromTimestamp,
                 toTimestamp
             );
             patient.Id = pt.TextResult;
@@ -165,6 +167,7 @@ namespace DraegerJson
             );
             string opdate = pt3.TextResult.ToString();
            patient.OPDate = DateTime.Parse(opdate);
+           
 
         }
 
@@ -182,7 +185,8 @@ namespace DraegerJson
             var pt1 = clapp.ParseTemplate(
                 p.CaseID,
                 template,
-                fromTimestamp,
+                patient.OPDate,
+                //fromTimestamp,
                 toTimestamp
             );
             patient.Location = pt1.TextResult;
@@ -208,7 +212,8 @@ namespace DraegerJson
                 var pt = clapp.ParseTemplate(
                     p.CaseID,
                     template,
-                    fromTimestamp,
+                    patient.OPDate,
+                    //fromTimestamp,
                     toTimestamp
                 );
                 BuildParameterFromTemplate(proc, pt, snomedID, patient);
@@ -220,7 +225,7 @@ namespace DraegerJson
         {
             var pt = clapp.ParseTemplate(
                    p.CaseID,
-                   CreateProcedureTemplate(),
+                   CreateProcedureTemplate(),                   
                    new DateTime(1990, 1, 1),
                    DateTime.Now
                );
