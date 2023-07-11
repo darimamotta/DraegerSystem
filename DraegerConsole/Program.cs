@@ -35,7 +35,8 @@ class Program
             RequestManagerByTime request = new RequestManagerByTime(
                 timestampUpdater, 
                 historyManager,
-                appConfig!
+                appConfig!,
+                new PerformedPeriodToPerformedDateTime()
             );
             request.StartRequests();
         }

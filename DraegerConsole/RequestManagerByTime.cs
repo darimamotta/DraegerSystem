@@ -24,6 +24,7 @@ namespace DraegerConsole
         private ITimestampUpdater timestampUpdater;
         private TimestampHistoryManager historyManager;
         private DraegerJson.ParameterHistory parameterHistory;
+        private IJsonModifier modifier;
 
         //temporary timestamps 
         //private DateTime[] temporaryDateTimes = 
@@ -31,13 +32,15 @@ namespace DraegerConsole
         public RequestManagerByTime(
             ITimestampUpdater timestampUpdater, 
             TimestampHistoryManager historyManager,
-            AppConfiguration appConfig
+            AppConfiguration appConfig,
+            IJsonModifier modifier
         )
         {
             this.appConfig = appConfig;
             this.timestampUpdater = timestampUpdater;
             this.historyManager = historyManager;            
             this.parameterHistory = new DraegerJson.ParameterHistory();
+            this.modifier = modifier;
         }
         private void SetTimer()
         {
@@ -94,7 +97,8 @@ namespace DraegerConsole
                 foreach (var pId in  jsons.Keys) 
                 {
                     IJsonProcessor jsonProcessor = new FileJsonProcessor(path+"/patId_"+pId+"_stamp_" + timestampUpdater.CurrentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss") + ".json");
-                    jsonProcessor.ProcessJson(jsons[pId]);             
+                    string resultJson = modifier.Modify(jsons[pId]);
+                    jsonProcessor.ProcessJson(resultJson);             
                 }                
             }
             DateTime cutOffDate = timestampUpdater.CurrentTimestamp.AddMinutes(-appConfig.HistoryTimeInMinutes);

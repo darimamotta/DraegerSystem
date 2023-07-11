@@ -121,6 +121,7 @@ namespace DraegerJson
                 BuildPatientAufnahmeNr(clapp,p,patient);
                 BuildPatientFullName(clapp,p,patient);  
                 BuildPatientOP(clapp,p,patient);
+                BuildPatientAdmissionWardDate(clapp, p, patient);
                 BuildPatientLocation(clapp,p,patient);
                 BuildTimestampsByProcedure(clapp, p, proc, patient);
              
@@ -139,7 +140,8 @@ namespace DraegerJson
             var pt = clapp.ParseTemplate(
                 p.CaseID,
                 template,
-                patient.OPDate,
+                patient.AdmissionToWardDate,
+                //patient.OPDate,
                 //fromTimestamp,
                 toTimestamp
             );
@@ -170,6 +172,20 @@ namespace DraegerJson
            
 
         }
+        private void BuildPatientAdmissionWardDate(CLAPP clapp, Patient p, ArrivalSick patient)
+        {
+            string template = CreateOPDate();
+            var pt4 = clapp.ParseTemplate(
+                p.CaseID,
+                template,
+                fromTimestamp,
+                toTimestamp
+            );
+            string opdate = pt4.TextResult.ToString();
+            patient.AdmissionToWardDate = DateTime.Parse(opdate);
+
+
+        }
 
         private void BuildPatientFullName(CLAPP clapp, Patient p, ArrivalSick patient)
         {
@@ -185,7 +201,8 @@ namespace DraegerJson
             var pt1 = clapp.ParseTemplate(
                 p.CaseID,
                 template,
-                patient.OPDate,
+                patient.AdmissionToWardDate,
+                //patient.OPDate,
                 //fromTimestamp,
                 toTimestamp
             );
@@ -212,7 +229,8 @@ namespace DraegerJson
                 var pt = clapp.ParseTemplate(
                     p.CaseID,
                     template,
-                    patient.OPDate,
+                    patient.AdmissionToWardDate,
+                    //patient.OPDate,
                     //fromTimestamp,
                     toTimestamp
                 );

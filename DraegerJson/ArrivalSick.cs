@@ -13,6 +13,7 @@ namespace DraegerJson
         public string FullName { get; set; } = "";
         public string Location { get; set; } = "";
         public DateTime OPDate { get; set; } 
+        public DateTime AdmissionToWardDate { get; set; }
         public List <Operation> Procedures { get; set; } = new List<Operation>();
         
     }
