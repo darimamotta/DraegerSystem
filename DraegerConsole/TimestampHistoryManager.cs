@@ -40,7 +40,13 @@ namespace DraegerConsole
         {
             if (History == null)
                 throw new OrderOfOperationsException("History must be initialized before saving");
-
+            string? dirName = Path.GetDirectoryName(pathToHistory);
+            if (dirName == null)
+            { throw new UnknownErrorException("Directory name is null"); }
+            if(!Directory.Exists(dirName))
+            { 
+                Directory.CreateDirectory(dirName); 
+            }
             File.WriteAllText(pathToHistory, JsonSerializer.Serialize(History));
         }
         public void Initialize()

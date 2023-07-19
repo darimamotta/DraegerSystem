@@ -86,6 +86,10 @@ namespace DraegerConsole
 
 
             string path = appConfig.PathToJsonFiles;
+            if(!Directory.Exists(path)) 
+            { 
+                Directory.CreateDirectory(path); 
+            }
             ConverterJson converterJson = new ConverterJson(parameterHistory);
             Console.WriteLine("Process from {0} to {1}...", timestampUpdater.PastTimestamp.ToString("yyyy.MM.dd_HH.mm.ss"), timestampUpdater.CurrentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss"));
             Hospital? hospital = hospitalProvider!.GetHospital();

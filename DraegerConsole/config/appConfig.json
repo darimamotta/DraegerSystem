@@ -9,7 +9,8 @@
   "TimestampsOffsetInSeconds": 0,
   "PathToJsonFiles": "data",
   "PathToHistory": "history",
-  "HistoryTimeInMinutes": 60
+  "HistoryTimeInMinutes": 60,
+  "FirstTimestamp": "2023-01-01T00:00:00+02:00"
 
 
 }

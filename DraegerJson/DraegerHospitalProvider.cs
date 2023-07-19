@@ -2,14 +2,17 @@
 using Draeger.Pdms.Services.Json;
 using Draeger.Pdms.Services.Json.Entities;
 using Draft_Draeger;
+using Hl7.Fhir.Model;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Patient = Draeger.Pdms.Services.Json.Entities.Patient;
 
 namespace DraegerJson
 {
@@ -292,14 +295,22 @@ namespace DraegerJson
             new SnomedParameter { Milestone ="milestone4", Id = "442335003", Name = "Time of establishment of adequate anesthesia" },
             new SnomedParameter { Milestone ="milestone5", Id = "442272006", Name = "Time patient ready for transport" },
             new SnomedParameter { Milestone ="milestone6", Id = "442385007", Name = "Time of patient arrival in procedure room" },
-            new SnomedParameter { Milestone ="milestone7", Id = "442126001", Name = "Start time for preparation of patient procedure room" },
+            new SnomedParameter { Milestone ="milestone7", Id = "442126001", Name = "Start time for preparation of patient in procedure room" },
             new SnomedParameter { Milestone ="milestone8", Id = "442371002", Name = "Start time of procedure" },
             new SnomedParameter { Milestone ="milestone9", Id = "442137000", Name = "Completion time of procedure" },
             new SnomedParameter { Milestone ="milestone10", Id = "442273001", Name = "Time procedure room ready for next case" },
             new SnomedParameter { Milestone ="milestone11", Id = "398164008", Name = "Anesthesia finish time" },
             new SnomedParameter { Milestone ="milestone12", Id = "441969007", Name = "Time of patient departure from procedure room" },
             new SnomedParameter { Milestone ="milestone13", Id = "397927004", Name = "Time ready for discharge from post anesthesia care unit" },
-            new SnomedParameter { Milestone ="milestone14", Id = "442431006", Name = "Time of discharge from post anesthesia care unit" }
+            new SnomedParameter { Milestone ="milestone14", Id = "442431006", Name = "Time of discharge from post anesthesia care unit" },
+            new SnomedParameter { Milestone ="milestone15", Id = "441968004", Name = "Time of patient arrival in healthcare facility"},
+            new SnomedParameter { Milestone ="milestone16", Id = "441927008", Name = "Time of patient arrival to location for anesthesia"},
+            new SnomedParameter { Milestone ="milestone18", Id = "442126001", Name = "Start time for preparation of patient" },
+            new SnomedParameter { Milestone ="milestone19", Id = "442336002", Name = "Completion time for preparation of patient in procedure room" },
+            new SnomedParameter { Milestone ="milestone20", Id = "442272006", Name = "Time patient ready for transport" },
+            new SnomedParameter { Milestone ="milestone21", Id = "442463000", Name = "Time ready for discharge from post anesthesia care unit" }
+
+
         };
 
        private string CreateParamsTemplate( string snomedID)

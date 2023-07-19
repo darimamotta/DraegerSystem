@@ -81,43 +81,44 @@ class Program
 
     private static ITimestampUpdater BuildTimestampUpdater()
     {
-              // return new NowTimestampUpdater(
-              //appConfig!.TimestampsOffsetInSeconds,
-              // historyManager!.History!.Units.Last().To
-           // );
-        return new FromArrayTimestampUpdater(new DateTime[]
-         {
-
-          new DateTime(1990,1,1,0,0,0,DateTimeKind.Local),
-         new DateTime(2023,6,13,9,0,0,DateTimeKind.Local),
-          new DateTime(2023,6,13,9,30,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,16,30,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,18,30,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,13,10,0,DateTimeKind.Local),
-          new DateTime(2023,6,19,11,00,0,DateTimeKind.Local),
-          new DateTime(2023,6,19,11,30,0,DateTimeKind.Local),
-          new DateTime(2023,6,19,12,00,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,13,50,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,14,00,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,14,10,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,14,20,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,14,30,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,14,40,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,14,50,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,15,00,0,DateTimeKind.Local),
-          new DateTime(2023,5,10,9,30,0,DateTimeKind.Local),
-          new DateTime(2023,5,10,9,40,0,DateTimeKind.Local),
-          new DateTime(2023,5,10,9,50,0,DateTimeKind.Local),
-          new DateTime(2023,5,10,10,0,0,DateTimeKind.Local),
-          new DateTime(2023,5,10,10,10,0,DateTimeKind.Local),
-          new DateTime(2023,5,10,10,20,0,DateTimeKind.Local),
-          new DateTime(2023,5,10,10,30,0,DateTimeKind.Local),
-          new DateTime(2023,5,10,10,40,0,DateTimeKind.Local),
-          new DateTime(2023,5,10,10,50,0,DateTimeKind.Local),
-          new DateTime(2023,5,10,11,0,0,DateTimeKind.Local)
-
-
-          });
+        // return new NowTimestampUpdater(
+        //appConfig!.TimestampsOffsetInSeconds,
+        // historyManager!.History!.Units.Last().To
+        // );
+        //return new FromArrayTimestampUpdater(new DateTime[]
+        // {
+        //
+        //  new DateTime(1990,1,1,0,0,0,DateTimeKind.Local),
+        // new DateTime(2023,6,13,9,0,0,DateTimeKind.Local),
+        //  new DateTime(2023,6,13,9,30,0,DateTimeKind.Local),
+        //  new DateTime(2023,6,8,16,30,0,DateTimeKind.Local),
+        //  new DateTime(2023,6,8,18,30,0,DateTimeKind.Local),
+        //  new DateTime(2023,6,8,13,10,0,DateTimeKind.Local),
+        //  new DateTime(2023,6,19,11,00,0,DateTimeKind.Local),
+        //  new DateTime(2023,6,19,11,30,0,DateTimeKind.Local),
+        //  new DateTime(2023,6,19,12,00,0,DateTimeKind.Local),
+        //  new DateTime(2023,6,8,13,50,0,DateTimeKind.Local),
+        //  new DateTime(2023,6,8,14,00,0,DateTimeKind.Local),
+        //  new DateTime(2023,6,8,14,10,0,DateTimeKind.Local),
+        //  new DateTime(2023,6,8,14,20,0,DateTimeKind.Local),
+        //  new DateTime(2023,6,8,14,30,0,DateTimeKind.Local),
+        //  new DateTime(2023,6,8,14,40,0,DateTimeKind.Local),
+        //  new DateTime(2023,6,8,14,50,0,DateTimeKind.Local),
+        //  new DateTime(2023,6,8,15,00,0,DateTimeKind.Local),
+        //  new DateTime(2023,5,10,9,30,0,DateTimeKind.Local),
+        //  new DateTime(2023,5,10,9,40,0,DateTimeKind.Local),
+        //  new DateTime(2023,5,10,9,50,0,DateTimeKind.Local),
+        //  new DateTime(2023,5,10,10,0,0,DateTimeKind.Local),
+        //  new DateTime(2023,5,10,10,10,0,DateTimeKind.Local),
+        //  new DateTime(2023,5,10,10,20,0,DateTimeKind.Local),
+        //  new DateTime(2023,5,10,10,30,0,DateTimeKind.Local),
+        //  new DateTime(2023,5,10,10,40,0,DateTimeKind.Local),
+        //  new DateTime(2023,5,10,10,50,0,DateTimeKind.Local),
+        //  new DateTime(2023,5,10,11,0,0,DateTimeKind.Local)
+        //
+        //
+        //  });
+        return new NowTimestampUpdater(appConfig!.TimestampsOffsetInSeconds, appConfig!.FirstTimestamp);
     }
 
   
