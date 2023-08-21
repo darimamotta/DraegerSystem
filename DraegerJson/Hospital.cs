@@ -11,5 +11,6 @@ namespace DraegerJson
         public List<ArrivalSick> Patients { get; set; } = new List<ArrivalSick>();
         public DateTime Timestamp { get; set; }
         
+        
     }
 }

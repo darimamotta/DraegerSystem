@@ -45,7 +45,7 @@ namespace DraegerConsole
         private void SetTimer()
         {
             timer = new System.Timers.Timer(appConfig!.DelayBetweenRequestsInMilliseconds);
-            timer.Elapsed += BuildJsonHandler;
+            timer.Elapsed += BuildJsonHandler; //methos  called every time after timer start, elaps event tr
             timer.AutoReset = true;
             timer.Enabled = true;
             
@@ -64,6 +64,8 @@ namespace DraegerConsole
         {
             BuildJson();
         }
+        
+
 
         private IHospitalProvider? hospitalProvider = null;
        //private DateTime pastTimestamp;
@@ -85,8 +87,8 @@ namespace DraegerConsole
             );
 
 
-            string path = appConfig.PathToJsonFiles;
-            if(!Directory.Exists(path)) 
+            string path = appConfig.PathToJsonFiles;            
+            if (!Directory.Exists(path)) 
             { 
                 Directory.CreateDirectory(path); 
             }
@@ -95,13 +97,13 @@ namespace DraegerConsole
             Hospital? hospital = hospitalProvider!.GetHospital();
             if (hospital != null)
             {
-                hospital.Timestamp = timestampUpdater.CurrentTimestamp;
-                               
+                hospital.Timestamp = timestampUpdater.CurrentTimestamp;                              
                 var jsons = converterJson.Convert(hospital);
-                foreach (var pId in  jsons.Keys) 
-                {
-                    IJsonProcessor jsonProcessor = new FileJsonProcessor(path+"/patId_"+pId+"_stamp_" + timestampUpdater.CurrentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss") + ".json");
-                    string resultJson = modifier.Modify(jsons[pId]);
+                foreach (var pj in  jsons) 
+                {            
+                    
+                    IJsonProcessor jsonProcessor = new FileJsonProcessor(path +"/patNr_" + pj.PatientId + "_AufnahmeNr_" + pj.AufnahmeNr + "_stamp_" + timestampUpdater.CurrentTimestamp.ToString("yyyy.MM.dd_HH.mm.ss") + ".json");
+                    string resultJson = modifier.Modify(pj.Json);
                     jsonProcessor.ProcessJson(resultJson);             
                 }                
             }
@@ -128,10 +130,8 @@ namespace DraegerConsole
 
        
         public void StartRequests()
-        {
-                     
-           
-            
+        {                   
+                      
             Console.WriteLine("Application started at " + DateTime.Now);
             BuildJson();
             SetUp();            

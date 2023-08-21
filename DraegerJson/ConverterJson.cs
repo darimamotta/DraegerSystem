@@ -13,7 +13,12 @@ using Hl7.Fhir.Utility;
 namespace DraegerJson
 {
    
-
+    public class PatientJson
+    {
+        public string PatientId { get; set; } = string.Empty;
+        public string AufnahmeNr { get; set;} = string.Empty;
+        public string Json { get; set; } = string.Empty;
+    }
     //Serialze Objects
     public class ConverterJson : IConverterJson
     {
@@ -21,16 +26,18 @@ namespace DraegerJson
         private ParameterHistory history;
       
 
-        public Dictionary<string, string> Convert(Hospital hospital)
+        public List<PatientJson> Convert(Hospital hospital)
         {
-            Dictionary<string,string> result = new Dictionary<string,string>();
+            List<PatientJson> result = new List<PatientJson>();
             currentHospital = hospital;
-            
+
             foreach (ArrivalSick pat in hospital.Patients)
             {
                 Bundle bundle = CreateNewBundle(hospital);
                 AddPatientToBundle(bundle, pat);
-                result.Add(pat.Id, CreateJsonFromBundle(bundle));
+                result.Add(new PatientJson { PatientId = pat.Id, 
+                                             AufnahmeNr = pat.AufnahmeNR, 
+                                             Json = CreateJsonFromBundle(bundle)});
                 
             }
             return result;        
@@ -53,7 +60,7 @@ namespace DraegerJson
             //AddListOfProcedures(bundle, pat);
             foreach (Operation op in pat.Procedures)
             {
-                if (op.Exist)
+               // if (op.Exist)
                     AddProcedureToBundle(bundle, pat, op, list);
             }
             bundle.Entry.Insert(0, new Bundle.EntryComponent { Resource = list, FullUrl = "https://srv-orchestra/List/1" });
@@ -73,7 +80,7 @@ namespace DraegerJson
         {
             foreach (Operation op in pat.Procedures)
             {
-                if (op.Exist)
+                //if (op.Exist)
                     list.Entry.Add(
                         new List.EntryComponent
                         {
@@ -126,7 +133,7 @@ namespace DraegerJson
         {
             foreach (Parameter param in op.Params)
             {
-                if (!history.Contains(param))
+                //if (!history.Contains(param))
                 {
                     AddParamToProcedure(param, pat, op, bundle, list);
                     history.Add(param);
@@ -171,7 +178,7 @@ namespace DraegerJson
         {
             Procedure p = new Procedure();
             p.Id = param.Milestone;
-            //p.Category = new CodeableConcept();
+            p.Category = new CodeableConcept();
             p.Code = new CodeableConcept();
 
             AddProcedureToList(p, list);

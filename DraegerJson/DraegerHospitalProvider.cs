@@ -86,7 +86,7 @@ namespace DraegerJson
                 foreach (var p in pList.PatientList) 
                 {
                     ArrivalSick patient = BuildPatient(clapp, p);
-                    if (PatientContainsParameters(patient))
+                    //if (PatientContainsParameters(patient))
                     { 
                         hospital.Patients.Add(patient);
 
@@ -99,29 +99,29 @@ namespace DraegerJson
         }
        
         
-          private bool PatientContainsParameters(ArrivalSick arrivalSick)
-        {
-            foreach (var procedure in arrivalSick.Procedures)
-            {
-                if (procedure.Params.Count>0)
-                {
-                    return true;
-                }
-
-            }
-            return false;
-        }
-        
+       //  private bool PatientContainsParameters(ArrivalSick arrivalSick)
+       //{
+       //    foreach (var procedure in arrivalSick.Procedures)
+       //    {
+       //        if (procedure.Params.Count>0)
+       //        {
+       //            return true;
+       //        }
+       //
+       //    }
+       //    return false;
+       //}
+       //
         
         private ArrivalSick BuildPatient(CLAPP clapp, Patient p)
         {
             clapp.SetPatient(p.CaseID);
-            ArrivalSick patient = new ArrivalSick { Id = p.CaseID };
+            ArrivalSick patient = new ArrivalSick {AufnahmeNR=p.AdmissionNumber };
             var proc = BuildProcedure(patient, clapp, p);
             if (proc.Exist)
             {
                 BuildPatientId(clapp,p,patient);
-                BuildPatientAufnahmeNr(clapp,p,patient);
+                //BuildPatientAufnahmeNr(clapp,p,patient);
                 BuildPatientFullName(clapp,p,patient);  
                 BuildPatientOP(clapp,p,patient);
                 BuildPatientAdmissionWardDate(clapp, p, patient);
@@ -135,6 +135,7 @@ namespace DraegerJson
             clapp.ReleasePatient();
             return patient;
         }
+     
 
 
         private void BuildPatientId(CLAPP clapp, Patient p, ArrivalSick patient)
@@ -143,9 +144,9 @@ namespace DraegerJson
             var pt = clapp.ParseTemplate(
                 p.CaseID,
                 template,
-                patient.AdmissionToWardDate,
+                //patient.AdmissionToWardDate,
                 //patient.OPDate,
-                //fromTimestamp,
+                fromTimestamp,
                 toTimestamp
             );
             patient.Id = pt.TextResult;
@@ -204,8 +205,8 @@ namespace DraegerJson
             var pt1 = clapp.ParseTemplate(
                 p.CaseID,
                 template,
-                patient.AdmissionToWardDate,
-                //patient.OPDate,
+                //patient.AdmissionToWardDate,
+                patient.OPDate,
                 //fromTimestamp,
                 toTimestamp
             );
@@ -232,8 +233,8 @@ namespace DraegerJson
                 var pt = clapp.ParseTemplate(
                     p.CaseID,
                     template,
-                    patient.AdmissionToWardDate,
-                    //patient.OPDate,
+                    //patient.AdmissionToWardDate,
+                    patient.OPDate,
                     //fromTimestamp,
                     toTimestamp
                 );
@@ -353,8 +354,10 @@ namespace DraegerJson
         {
             //return "[HISPatient: Property = Aufnahme_NR]";
             //return "[Pat: Property = Aufnahme_NR]";
-            return "[Pat: Property=Aufnahme_NR]";
-           
+            //return "[Pat: Property=CurrentHISCaseID]";
+            return "[D: Format=!({CurrentHISCaseID})]";
+            //return "[Pat: AdmissionID]";
+
 
         }
         private string CreateOPDate()
