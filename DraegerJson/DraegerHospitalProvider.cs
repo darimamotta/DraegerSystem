@@ -86,7 +86,7 @@ namespace DraegerJson
                 foreach (var p in pList.PatientList) 
                 {
                     ArrivalSick patient = BuildPatient(clapp, p);
-                    //if (PatientContainsParameters(patient))
+                    if (PatientContainsParameters(patient))
                     { 
                         hospital.Patients.Add(patient);
 
@@ -99,19 +99,19 @@ namespace DraegerJson
         }
        
         
-       //  private bool PatientContainsParameters(ArrivalSick arrivalSick)
-       //{
-       //    foreach (var procedure in arrivalSick.Procedures)
-       //    {
-       //        if (procedure.Params.Count>0)
-       //        {
-       //            return true;
-       //        }
-       //
-       //    }
-       //    return false;
-       //}
-       //
+         private bool PatientContainsParameters(ArrivalSick arrivalSick)
+       {
+           foreach (var procedure in arrivalSick.Procedures)
+           {
+               if (procedure.Params.Count>0)
+               {
+                   return true;
+               }
+       
+           }
+           return false;
+       }
+       
         
         private ArrivalSick BuildPatient(CLAPP clapp, Patient p)
         {

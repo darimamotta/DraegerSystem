@@ -11,6 +11,7 @@ using System.Security.Cryptography;
 using System.Xml.Linq;
 using System.Text.Json;
 using DraegerConsole.exceptions;
+using System.Runtime.InteropServices;
 
 class Program
 {
@@ -27,13 +28,28 @@ class Program
     static int Main(string[] args)
     {
         
+
         try
         {
             ReadConfiguration();
+            
+            if (args.Length == 0|| args.Length == 2 && (args[0]=="-m" || args[0] == "--mode") && args[1] == "now")
+            {
+                timestampUpdater = new NowTimestampUpdater(appConfig!.TimestampsOffsetInSeconds, appConfig.FirstTimestamp);
+            }
+            else if(args.Length==3&& (args[0] == "-m" || args[0] == "--mode") && args[1] == "array")
+            {
+                timestampUpdater = LoadDateTimeArrayFromFile(args[2]);
+            }
+            else
+            {
+                PrintHelp();
+                return 0;
+            }
             historyManager = BuildHistoryManager();
-            timestampUpdater = BuildTimestampUpdater();
+            
             RequestManagerByTime request = new RequestManagerByTime(
-                timestampUpdater, 
+                timestampUpdater!, 
                 historyManager,
                 appConfig!,
                 new PerformedPeriodToPerformedDateTime()
@@ -48,6 +64,26 @@ class Program
       
     }
 
+    private static ITimestampUpdater? LoadDateTimeArrayFromFile(string filename)
+    {
+        List<DateTime> dateTimestamps = new List<DateTime>();
+        using(StreamReader reader = new StreamReader(new FileStream(filename, FileMode.Open)))
+        {
+            while (!reader.EndOfStream)
+            {
+                DateTime dt;
+                if( DateTime.TryParse(reader.ReadLine(), out dt))
+                {
+                    dateTimestamps.Add(dt);
+                }
+            }
+        }
+        return new FromArrayTimestampUpdater(dateTimestamps.ToArray());
+    }
+    private static void PrintHelp()
+    {
+        Console.WriteLine("usage: DragerConsole [-h | --help | -m now | --mode now | -m array <file> |\n       --mode array <file>]");
+    }
     private static TimestampHistoryManager BuildHistoryManager()
     {
         TimestampHistoryManager thm = new TimestampHistoryManager(appConfig!.PathToHistory+"/history.json");
@@ -89,35 +125,24 @@ class Program
          {
 
           //new DateTime(1990,1,1,0,0,0,DateTimeKind.Local),
-         new DateTime(2023,8,11,9,0,0,DateTimeKind.Local),
-          new DateTime(2023,8,11,9,30,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,16,30,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,18,30,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,13,10,0,DateTimeKind.Local),
-          new DateTime(2023,6,19,11,00,0,DateTimeKind.Local),
-          new DateTime(2023,6,19,11,30,0,DateTimeKind.Local),
-          new DateTime(2023,6,19,12,00,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,13,50,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,14,00,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,14,10,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,14,20,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,14,30,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,14,40,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,14,50,0,DateTimeKind.Local),
-          new DateTime(2023,6,8,15,00,0,DateTimeKind.Local),
-          new DateTime(2023,5,10,9,30,0,DateTimeKind.Local),
-          new DateTime(2023,5,10,9,40,0,DateTimeKind.Local),
-          new DateTime(2023,5,10,9,50,0,DateTimeKind.Local),
-          new DateTime(2023,5,10,10,0,0,DateTimeKind.Local),
-          new DateTime(2023,5,10,10,10,0,DateTimeKind.Local),
-          new DateTime(2023,5,10,10,20,0,DateTimeKind.Local),
-          new DateTime(2023,5,10,10,30,0,DateTimeKind.Local),
-          new DateTime(2023,5,10,10,40,0,DateTimeKind.Local),
-          new DateTime(2023,5,10,10,50,0,DateTimeKind.Local),
-          new DateTime(2023,5,10,11,0,0,DateTimeKind.Local)
+       
+          new DateTime(2023,8,18,13,00,0,DateTimeKind.Local),
+          new DateTime(2023,8,18,14,00,0,DateTimeKind.Local),
+          new DateTime(2023,8,18,14,30,0,DateTimeKind.Local),
+          new DateTime(2023,8,18,15,00,0,DateTimeKind.Local),
+          new DateTime(2023,8,18,15,30,0,DateTimeKind.Local),
+          new DateTime(2023,8,18,16,00,0,DateTimeKind.Local),
+          new DateTime(2023,8,18,16,30,0,DateTimeKind.Local),
+          new DateTime(2023,8,18,16,00,0,DateTimeKind.Local),
+          new DateTime(2023,8,18,16,30,0,DateTimeKind.Local),
+          new DateTime(2023,8,18,17,00,0,DateTimeKind.Local),
+          new DateTime(2023,8,18,17,30,0,DateTimeKind.Local),
+          new DateTime(2023,8,18,18,00,0,DateTimeKind.Local)
+
 
 
           });
+        
         //return new NowTimestampUpdater(appConfig!.TimestampsOffsetInSeconds, appConfig!.FirstTimestamp);
     }
 
