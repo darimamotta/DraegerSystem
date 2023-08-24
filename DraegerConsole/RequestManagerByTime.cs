@@ -10,7 +10,7 @@ using System.Timers;
 using System.Security.Cryptography;
 using System.Xml.Linq;
 using System.Text.Json;
-using DraegerConsole.exceptions;
+using DraegerConsole.Exceptions;
 using System;
 
 namespace DraegerConsole

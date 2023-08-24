@@ -1,7 +1,8 @@
 {
   "profiles": {
     "DraegerConsole": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "- m array dateTimes.txt"
     }
   }
 }

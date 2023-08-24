@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
-using DraegerConsole.exceptions;
+using DraegerConsole.Exceptions;
 
 namespace DraegerConsole
 {

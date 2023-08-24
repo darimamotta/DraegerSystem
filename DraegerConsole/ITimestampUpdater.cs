@@ -8,8 +8,9 @@ namespace DraegerConsole
 {
     public interface ITimestampUpdater
     {
-        DateTime CurrentTimestamp { get; set; }
-        DateTime PastTimestamp { get; set; }
+        DateTime CurrentTimestamp { get; }
+        DateTime PastTimestamp { get; }
         void UpdateTimestamps();
+        bool CanUpdate { get; }
     }
 }

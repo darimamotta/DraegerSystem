@@ -10,25 +10,21 @@ using System.Timers;
 using System.Security.Cryptography;
 using System.Xml.Linq;
 using System.Text.Json;
-using DraegerConsole.exceptions;
+using DraegerConsole.Exceptions;
 using System.Runtime.InteropServices;
 
 class Program
 {
     private static AppConfiguration? appConfig;
     private static TimestampHistoryManager? historyManager;
-    private static ITimestampUpdater? timestampUpdater;
-    
+    private static ITimestampUpdater? timestampUpdater;    
     private static void ProcessError(Exception ex)
     {
         Console.WriteLine(ex.ToString());
         System.Environment.Exit(1);
     }
-
     static int Main(string[] args)
-    {
-        
-
+    {       
         try
         {
             ReadConfiguration();
@@ -60,8 +56,7 @@ class Program
         {
             ProcessError(ex);
         }
-        return 0;
-      
+        return 0;      
     }
 
     private static ITimestampUpdater? LoadDateTimeArrayFromFile(string filename)
@@ -138,8 +133,6 @@ class Program
           new DateTime(2023,8,18,17,00,0,DateTimeKind.Local),
           new DateTime(2023,8,18,17,30,0,DateTimeKind.Local),
           new DateTime(2023,8,18,18,00,0,DateTimeKind.Local)
-
-
 
           });
         

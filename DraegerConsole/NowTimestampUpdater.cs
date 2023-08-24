@@ -11,6 +11,7 @@ namespace DraegerConsole
         public DateTime CurrentTimestamp { get; set; }
 
         public DateTime PastTimestamp { get; set; }
+        public bool CanUpdate { get {  return true; } }
         private int offsetInSeconds;
         public NowTimestampUpdater(int offsetInSeconds, DateTime firstTimestamp)
         {
