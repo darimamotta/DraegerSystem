@@ -44,7 +44,7 @@ namespace DraegerConsole
         }
         private void SetTimer()
         {
-            timer = new System.Timers.Timer(appConfig!.DelayBetweenRequestsInMilliseconds);
+            timer = new System.Timers.Timer(appConfig!.TimestampsIntervalInSeconds*1000);
             timer.Elapsed += BuildJsonHandler; //methos  called every time after timer start, elaps event tr
             timer.AutoReset = true;
             timer.Enabled = true;
@@ -136,7 +136,7 @@ namespace DraegerConsole
             BuildJson();
             SetUp();            
             
-            Console.WriteLine("Enter 'Exit' for stop application");
+            
             do
             {
                 string? userInput = Console.ReadLine();

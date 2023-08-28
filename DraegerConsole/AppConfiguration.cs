@@ -13,12 +13,13 @@ namespace DraegerConsole
         public string ClappId { get; set; } = string.Empty;
         public string ServerHostName { get; set; } = string.Empty;
         public string DomainId { get; set; } = string.Empty;
-        public int ServerPort { get; set; }
-        public int DelayBetweenRequestsInMilliseconds { get; set; }
+        public int ServerPort { get; set; }      
         public int TimestampsOffsetInSeconds { get; set; }
         public string PathToJsonFiles { get; set; } = string.Empty;
         public string PathToHistory { get;set; } = string.Empty;
         public int HistoryTimeInMinutes { get; set; }
         public DateTime FirstTimestamp { get; set; }
+        public int TimestampsIntervalInSeconds { get; set; }
+        public DateTime StartIntervalTimestamp { get; set; } 
     }
 }

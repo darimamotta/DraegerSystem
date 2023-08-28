@@ -4,13 +4,14 @@
   "ClappId": "Clapp1",
   "ServerHostName": "SRVDEMOICM05V.DRAEGER.DEMO.CH",
   "DomainId": "clappathon",
-  "ServerPort": 25000,
-  "DelayBetweenRequestsInMilliseconds": 10000,
+  "ServerPort": 25000,  
   "TimestampsOffsetInSeconds": 0,
   "PathToJsonFiles": "data",
   "PathToHistory": "history",
   "HistoryTimeInMinutes": 60,
-  "FirstTimestamp": "2023-01-01T00:00:00+02:00"
+  "FirstTimestamp": "2023-08-05T00:00:00+02:00",
+  "TimestampsIntervalInSeconds": 10,
+  "StartIntervalTimestamp": "2023-08-28T10:00:00+02:00"
 
 
 }

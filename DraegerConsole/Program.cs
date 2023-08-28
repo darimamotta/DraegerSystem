@@ -29,13 +29,17 @@ class Program
         {
             ReadConfiguration();
             
-            if (args.Length == 0|| args.Length == 2 && (args[0]=="-m" || args[0] == "--mode") && args[1] == "now")
+            if (args.Length == 0|| args.Length == 2 && (args[0]=="-m" || args[0] == "--mode") && args[1] == "interval")
             {
-                timestampUpdater = new NowTimestampUpdater(appConfig!.TimestampsOffsetInSeconds, appConfig.FirstTimestamp);
+                timestampUpdater = new IntervalTimestampUpdater(appConfig!.TimestampsIntervalInSeconds, appConfig!.FirstTimestamp, appConfig!.StartIntervalTimestamp);
             }
             else if(args.Length==3&& (args[0] == "-m" || args[0] == "--mode") && args[1] == "array")
             {
                 timestampUpdater = LoadDateTimeArrayFromFile(args[2]);
+            }
+            else if (args.Length == 3 && (args[0] == "-m" || args[0] == "--mode") && args[1] == "now")
+            {
+                timestampUpdater = new NowTimestampUpdater(appConfig!.TimestampsOffsetInSeconds, appConfig.FirstTimestamp);
             }
             else
             {
@@ -77,7 +81,7 @@ class Program
     }
     private static void PrintHelp()
     {
-        Console.WriteLine("usage: DragerConsole [-h | --help | -m now | --mode now | -m array <file> |\n       --mode array <file>]");
+        Console.WriteLine("usage: DragerConsole [-h | --help | -m now | --mode now | -m array <file> |\n       --mode array <file> | -m interval | --mode interval]");
     }
     private static TimestampHistoryManager BuildHistoryManager()
     {
@@ -85,59 +89,12 @@ class Program
         if (File.Exists(appConfig!.PathToHistory + "/history.json"))        
             thm.Load();        
         else 
-            thm.Initialize(ReadTimestampFromConsole());       
+            thm.Initialize(appConfig!.FirstTimestamp);       
         return thm;
     }
-    private static DateTime ReadTimestampFromConsole()
-    {
-        Console.WriteLine("Enter initial value of timestamp (empty line for {0})", TimestampHistoryManager.DefaultStartTimestamp );
-        string? input = Console.ReadLine();
-        if (input == null)
-            throw new UnknownErrorException("Error reading from console");
-        if (input.Trim().Length == 0)
-        {
-            
-            return TimestampHistoryManager.DefaultStartTimestamp;
-        }
-        try
-        {
-            return DateTime.Parse(input);
-        }
-        catch (Exception e)
-        {
-            throw new InputFormatException("Incorrect format of Timestamp");
-        }
+   
 
-    }
 
-    private static ITimestampUpdater BuildTimestampUpdater()
-    {
-        // return new NowTimestampUpdater(
-        //appConfig!.TimestampsOffsetInSeconds,
-        // historyManager!.History!.Units.Last().To
-        // );
-        return new FromArrayTimestampUpdater(new DateTime[]
-         {
-
-          //new DateTime(1990,1,1,0,0,0,DateTimeKind.Local),
-       
-          new DateTime(2023,8,18,13,00,0,DateTimeKind.Local),
-          new DateTime(2023,8,18,14,00,0,DateTimeKind.Local),
-          new DateTime(2023,8,18,14,30,0,DateTimeKind.Local),
-          new DateTime(2023,8,18,15,00,0,DateTimeKind.Local),
-          new DateTime(2023,8,18,15,30,0,DateTimeKind.Local),
-          new DateTime(2023,8,18,16,00,0,DateTimeKind.Local),
-          new DateTime(2023,8,18,16,30,0,DateTimeKind.Local),
-          new DateTime(2023,8,18,16,00,0,DateTimeKind.Local),
-          new DateTime(2023,8,18,16,30,0,DateTimeKind.Local),
-          new DateTime(2023,8,18,17,00,0,DateTimeKind.Local),
-          new DateTime(2023,8,18,17,30,0,DateTimeKind.Local),
-          new DateTime(2023,8,18,18,00,0,DateTimeKind.Local)
-
-          });
-        
-        //return new NowTimestampUpdater(appConfig!.TimestampsOffsetInSeconds, appConfig!.FirstTimestamp);
-    }
 
   
     private static void ReadConfiguration()

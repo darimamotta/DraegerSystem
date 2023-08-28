@@ -25,7 +25,7 @@ namespace DraegerConsole
         {
             PastTimestamp = CurrentTimestamp;
             CurrentTimestamp = CurrentTimestamp.AddSeconds(IntervalInSeconds);
-           
         }
+           
     }
 }
