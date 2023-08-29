@@ -14,6 +14,7 @@ namespace Draft_Draeger
         public FileJsonProcessor(string dataPath) 
         {
             this.dataPath = dataPath;
+            CheckJsonDirectory();
         }
 
         public void ProcessJson(string obj)
@@ -21,6 +22,14 @@ namespace Draft_Draeger
             using (StreamWriter writer = new StreamWriter(dataPath))
             {
                 writer.WriteLine(obj);
+            }
+        }
+
+        private void CheckJsonDirectory()
+        {
+            if (!Directory.Exists(Path.GetDirectoryName(dataPath)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(dataPath)!);
             }
         }
     }
