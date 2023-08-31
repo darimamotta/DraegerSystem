@@ -10,8 +10,6 @@
   "PathToHistory": "history",
   "HistoryTimeInMinutes": 60,
   "FirstTimestamp": "2023-08-05T00:00:00+02:00",
-  "TimestampsIntervalInSeconds": 10,
-  "StartIntervalTimestamp": "2023-08-28T10:00:00+02:00"
-
-
+  "TimestampsIntervalInSeconds": 1800,
+  "RequestsIntervalInSeconds": 60
 }

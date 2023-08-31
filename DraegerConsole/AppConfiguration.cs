@@ -20,6 +20,8 @@ namespace DraegerConsole
         public int HistoryTimeInMinutes { get; set; }
         public DateTime FirstTimestamp { get; set; }
         public int TimestampsIntervalInSeconds { get; set; }
-        public DateTime StartIntervalTimestamp { get; set; } 
+        public int RequestsIntervalInSeconds { get; set; }
+
+
     }
 }

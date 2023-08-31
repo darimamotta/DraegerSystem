@@ -1,0 +1,253 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "timestamp": "2023-08-28T10:00:20+02:00",
+  "entry": [
+    {
+      "fullUrl": "https://srv-orchestra/List/1",
+      "resource": {
+        "resourceType": "List",
+        "id": "example",
+        "status": "current",
+        "mode": "snapshot",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "397788003",
+              "display": "Procedure milestone (observable entity)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/21322"
+        },
+        "source": {
+          "reference": "Practitioner/EXTICM"
+        },
+        "entry": [
+          {
+            "item": {
+              "reference": "milestone3"
+            }
+          },
+          {
+            "item": {
+              "reference": "milestone4"
+            }
+          },
+          {
+            "item": {
+              "reference": "milestone12"
+            }
+          },
+          {
+            "item": {
+              "reference": "milestone14"
+            }
+          },
+          {
+            "item": {
+              "reference": "milestone19"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://srv-orchestra/Procedure/25424/Milestone/milestone3",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "milestone3",
+        "partOf": [
+          {
+            "reference": "Procedure/25424"
+          }
+        ],
+        "status": "completed",
+        "category": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "397788003",
+              "display": "Procedure milestone (observable entity)"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "441765008",
+              "display": "Time of induction of anesthesia"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/21322",
+          "display": "Test, Zwei"
+        },
+        "performedDateTime":"2023-06-08T15:40:00+02:00",
+        "recorder": {
+          "reference": "Practitioner/EXTICM"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://srv-orchestra/Procedure/25424/Milestone/milestone4",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "milestone4",
+        "partOf": [
+          {
+            "reference": "Procedure/25424"
+          }
+        ],
+        "status": "completed",
+        "category": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "397788003",
+              "display": "Procedure milestone (observable entity)"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "442335003",
+              "display": "Time of establishment of adequate anesthesia"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/21322",
+          "display": "Test, Zwei"
+        },
+        "performedDateTime":"2023-06-13T16:25:00+02:00",
+        "recorder": {
+          "reference": "Practitioner/EXTICM"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://srv-orchestra/Procedure/25424/Milestone/milestone12",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "milestone12",
+        "partOf": [
+          {
+            "reference": "Procedure/25424"
+          }
+        ],
+        "status": "completed",
+        "category": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "397788003",
+              "display": "Procedure milestone (observable entity)"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "441969007",
+              "display": "Time of patient departure from procedure room"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/21322",
+          "display": "Test, Zwei"
+        },
+        "performedDateTime":"2023-06-13T16:21:00+02:00",
+        "recorder": {
+          "reference": "Practitioner/EXTICM"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://srv-orchestra/Procedure/25424/Milestone/milestone14",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "milestone14",
+        "partOf": [
+          {
+            "reference": "Procedure/25424"
+          }
+        ],
+        "status": "completed",
+        "category": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "397788003",
+              "display": "Procedure milestone (observable entity)"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "442431006",
+              "display": "Time of discharge from post anesthesia care unit"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/21322",
+          "display": "Test, Zwei"
+        },
+        "performedDateTime":"2023-06-13T16:24:00+02:00",
+        "recorder": {
+          "reference": "Practitioner/EXTICM"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://srv-orchestra/Procedure/25424/Milestone/milestone19",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "milestone19",
+        "partOf": [
+          {
+            "reference": "Procedure/25424"
+          }
+        ],
+        "status": "completed",
+        "category": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "397788003",
+              "display": "Procedure milestone (observable entity)"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "442336002",
+              "display": "Completion time for preparation of patient in procedure room"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/21322",
+          "display": "Test, Zwei"
+        },
+        "performedDateTime":"2023-06-13T16:28:00+02:00",
+        "recorder": {
+          "reference": "Practitioner/EXTICM"
+        }
+      }
+    }
+  ]
+}

@@ -44,7 +44,7 @@ namespace DraegerConsole
         private void SetTimer()
         {
             timer = new System.Timers.Timer(
-                appConfig!.TimestampsIntervalInSeconds*1000
+                appConfig!.RequestsIntervalInSeconds*1000
             );
             timer.Elapsed += BuildJsonHandler; 
             timer.AutoReset = true;

@@ -1,0 +1,341 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "timestamp": "2023-08-28T10:00:20+02:00",
+  "entry": [
+    {
+      "fullUrl": "https://srv-orchestra/List/1",
+      "resource": {
+        "resourceType": "List",
+        "id": "example",
+        "status": "current",
+        "mode": "snapshot",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "397788003",
+              "display": "Procedure milestone (observable entity)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/345665"
+        },
+        "source": {
+          "reference": "Practitioner/EXTICM"
+        },
+        "entry": [
+          {
+            "item": {
+              "reference": "milestone7"
+            }
+          },
+          {
+            "item": {
+              "reference": "milestone11"
+            }
+          },
+          {
+            "item": {
+              "reference": "milestone14"
+            }
+          },
+          {
+            "item": {
+              "reference": "milestone15"
+            }
+          },
+          {
+            "item": {
+              "reference": "milestone16"
+            }
+          },
+          {
+            "item": {
+              "reference": "milestone18"
+            }
+          },
+          {
+            "item": {
+              "reference": "milestone19"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://srv-orchestra/Procedure/645634/Milestone/milestone7",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "milestone7",
+        "partOf": [
+          {
+            "reference": "Procedure/645634"
+          }
+        ],
+        "status": "completed",
+        "category": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "397788003",
+              "display": "Procedure milestone (observable entity)"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "442126001",
+              "display": "Start time for preparation of patient in procedure room"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/345665",
+          "display": "Test, Drei"
+        },
+        "performedDateTime":"2023-06-13T09:09:00+02:00",
+        "recorder": {
+          "reference": "Practitioner/EXTICM"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://srv-orchestra/Procedure/645634/Milestone/milestone11",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "milestone11",
+        "partOf": [
+          {
+            "reference": "Procedure/645634"
+          }
+        ],
+        "status": "completed",
+        "category": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "397788003",
+              "display": "Procedure milestone (observable entity)"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "398164008",
+              "display": "Anesthesia finish time"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/345665",
+          "display": "Test, Drei"
+        },
+        "performedDateTime":"2023-06-13T09:10:00+02:00",
+        "recorder": {
+          "reference": "Practitioner/EXTICM"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://srv-orchestra/Procedure/645634/Milestone/milestone14",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "milestone14",
+        "partOf": [
+          {
+            "reference": "Procedure/645634"
+          }
+        ],
+        "status": "completed",
+        "category": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "397788003",
+              "display": "Procedure milestone (observable entity)"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "442431006",
+              "display": "Time of discharge from post anesthesia care unit"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/345665",
+          "display": "Test, Drei"
+        },
+        "performedDateTime":"2023-06-13T09:10:00+02:00",
+        "recorder": {
+          "reference": "Practitioner/EXTICM"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://srv-orchestra/Procedure/645634/Milestone/milestone15",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "milestone15",
+        "partOf": [
+          {
+            "reference": "Procedure/645634"
+          }
+        ],
+        "status": "completed",
+        "category": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "397788003",
+              "display": "Procedure milestone (observable entity)"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "441968004",
+              "display": "Time of patient arrival in healthcare facility"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/345665",
+          "display": "Test, Drei"
+        },
+        "performedDateTime":"2023-06-13T09:11:00+02:00",
+        "recorder": {
+          "reference": "Practitioner/EXTICM"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://srv-orchestra/Procedure/645634/Milestone/milestone16",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "milestone16",
+        "partOf": [
+          {
+            "reference": "Procedure/645634"
+          }
+        ],
+        "status": "completed",
+        "category": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "397788003",
+              "display": "Procedure milestone (observable entity)"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "441927008",
+              "display": "Time of patient arrival to location for anesthesia"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/345665",
+          "display": "Test, Drei"
+        },
+        "performedDateTime":"2023-06-13T09:11:00+02:00",
+        "recorder": {
+          "reference": "Practitioner/EXTICM"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://srv-orchestra/Procedure/645634/Milestone/milestone18",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "milestone18",
+        "partOf": [
+          {
+            "reference": "Procedure/645634"
+          }
+        ],
+        "status": "completed",
+        "category": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "397788003",
+              "display": "Procedure milestone (observable entity)"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "442126001",
+              "display": "Start time for preparation of patient"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/345665",
+          "display": "Test, Drei"
+        },
+        "performedDateTime":"2023-06-13T09:09:00+02:00",
+        "recorder": {
+          "reference": "Practitioner/EXTICM"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://srv-orchestra/Procedure/645634/Milestone/milestone19",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "milestone19",
+        "partOf": [
+          {
+            "reference": "Procedure/645634"
+          }
+        ],
+        "status": "completed",
+        "category": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "397788003",
+              "display": "Procedure milestone (observable entity)"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "442336002",
+              "display": "Completion time for preparation of patient in procedure room"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/345665",
+          "display": "Test, Drei"
+        },
+        "performedDateTime":"2023-06-13T09:10:00+02:00",
+        "recorder": {
+          "reference": "Practitioner/EXTICM"
+        }
+      }
+    }
+  ]
+}

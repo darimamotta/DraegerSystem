@@ -1,0 +1,297 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "timestamp": "2023-08-28T10:00:20+02:00",
+  "entry": [
+    {
+      "fullUrl": "https://srv-orchestra/List/1",
+      "resource": {
+        "resourceType": "List",
+        "id": "example",
+        "status": "current",
+        "mode": "snapshot",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "397788003",
+              "display": "Procedure milestone (observable entity)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/1234234"
+        },
+        "source": {
+          "reference": "Practitioner/EXTICM"
+        },
+        "entry": [
+          {
+            "item": {
+              "reference": "milestone3"
+            }
+          },
+          {
+            "item": {
+              "reference": "milestone4"
+            }
+          },
+          {
+            "item": {
+              "reference": "milestone9"
+            }
+          },
+          {
+            "item": {
+              "reference": "milestone12"
+            }
+          },
+          {
+            "item": {
+              "reference": "milestone16"
+            }
+          },
+          {
+            "item": {
+              "reference": "milestone19"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://srv-orchestra/Procedure/344545/Milestone/milestone3",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "milestone3",
+        "partOf": [
+          {
+            "reference": "Procedure/344545"
+          }
+        ],
+        "status": "completed",
+        "category": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "397788003",
+              "display": "Procedure milestone (observable entity)"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "441765008",
+              "display": "Time of induction of anesthesia"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/1234234",
+          "display": "Test, Vier"
+        },
+        "performedDateTime":"2023-06-13T09:10:00+02:00",
+        "recorder": {
+          "reference": "Practitioner/EXTICM"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://srv-orchestra/Procedure/344545/Milestone/milestone4",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "milestone4",
+        "partOf": [
+          {
+            "reference": "Procedure/344545"
+          }
+        ],
+        "status": "completed",
+        "category": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "397788003",
+              "display": "Procedure milestone (observable entity)"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "442335003",
+              "display": "Time of establishment of adequate anesthesia"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/1234234",
+          "display": "Test, Vier"
+        },
+        "performedDateTime":"2023-06-13T09:10:00+02:00",
+        "recorder": {
+          "reference": "Practitioner/EXTICM"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://srv-orchestra/Procedure/344545/Milestone/milestone9",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "milestone9",
+        "partOf": [
+          {
+            "reference": "Procedure/344545"
+          }
+        ],
+        "status": "completed",
+        "category": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "397788003",
+              "display": "Procedure milestone (observable entity)"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "442137000",
+              "display": "Completion time of procedure"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/1234234",
+          "display": "Test, Vier"
+        },
+        "performedDateTime":"2023-06-13T09:10:00+02:00",
+        "recorder": {
+          "reference": "Practitioner/EXTICM"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://srv-orchestra/Procedure/344545/Milestone/milestone12",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "milestone12",
+        "partOf": [
+          {
+            "reference": "Procedure/344545"
+          }
+        ],
+        "status": "completed",
+        "category": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "397788003",
+              "display": "Procedure milestone (observable entity)"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "441969007",
+              "display": "Time of patient departure from procedure room"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/1234234",
+          "display": "Test, Vier"
+        },
+        "performedDateTime":"2023-06-13T09:10:00+02:00",
+        "recorder": {
+          "reference": "Practitioner/EXTICM"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://srv-orchestra/Procedure/344545/Milestone/milestone16",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "milestone16",
+        "partOf": [
+          {
+            "reference": "Procedure/344545"
+          }
+        ],
+        "status": "completed",
+        "category": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "397788003",
+              "display": "Procedure milestone (observable entity)"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "441927008",
+              "display": "Time of patient arrival to location for anesthesia"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/1234234",
+          "display": "Test, Vier"
+        },
+        "performedDateTime":"2023-06-13T09:10:00+02:00",
+        "recorder": {
+          "reference": "Practitioner/EXTICM"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://srv-orchestra/Procedure/344545/Milestone/milestone19",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "milestone19",
+        "partOf": [
+          {
+            "reference": "Procedure/344545"
+          }
+        ],
+        "status": "completed",
+        "category": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "397788003",
+              "display": "Procedure milestone (observable entity)"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "442336002",
+              "display": "Completion time for preparation of patient in procedure room"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/1234234",
+          "display": "Test, Vier"
+        },
+        "performedDateTime":"2023-06-13T09:10:00+02:00",
+        "recorder": {
+          "reference": "Practitioner/EXTICM"
+        }
+      }
+    }
+  ]
+}

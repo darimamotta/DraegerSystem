@@ -28,10 +28,12 @@ class Program
         try
         {
             ReadConfiguration();
+            if (!CheckConfigs())
+                return 0;
             
             if (args.Length == 0|| args.Length == 2 && (args[0]=="-m" || args[0] == "--mode") && args[1] == "interval")
             {
-                timestampUpdater = new IntervalTimestampUpdater(appConfig!.TimestampsIntervalInSeconds, appConfig!.FirstTimestamp, appConfig!.StartIntervalTimestamp);
+                timestampUpdater = new IntervalTimestampUpdater(appConfig!.TimestampsIntervalInSeconds, appConfig!.FirstTimestamp, DateTime.Now);
             }
             else if(args.Length==3&& (args[0] == "-m" || args[0] == "--mode") && args[1] == "array")
             {
@@ -62,7 +64,17 @@ class Program
         }
         return 0;      
     }
-
+    public static bool CheckConfigs()
+    {
+        if(appConfig!.RequestsIntervalInSeconds == appConfig.TimestampsIntervalInSeconds)
+        {
+            return true;
+        }
+        Console.WriteLine("RequestsIntervalInSeconds and TimestampsIntervalInSeconds are different. Would you like to continue? Y/n");
+        if (Console.ReadLine()!.ToLower().Trim()=="n")
+            return false;
+        return true;
+    }
     private static ITimestampUpdater? LoadDateTimeArrayFromFile(string filename)
     {
         List<DateTime> dateTimestamps = new List<DateTime>();
@@ -91,12 +103,7 @@ class Program
         else 
             thm.Initialize(appConfig!.FirstTimestamp);       
         return thm;
-    }
-   
-
-
-
-  
+    } 
     private static void ReadConfiguration()
     {
         if (!File.Exists("config/appConfig.json"))
