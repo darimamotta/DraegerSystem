@@ -28,8 +28,8 @@ class Program
         try
         {
             ReadConfiguration();
-            if (!CheckConfigs())
-                return 0;
+            //if (!CheckConfigs())
+            //    return 0;
             
             if (args.Length == 0|| args.Length == 2 && (args[0]=="-m" || args[0] == "--mode") && args[1] == "interval")
             {
@@ -70,7 +70,7 @@ class Program
         {
             return true;
         }
-        Console.WriteLine("RequestsIntervalInSeconds and TimestampsIntervalInSeconds are different. Would you like to continue? Y/n");
+        LogManager.Log("RequestsIntervalInSeconds and TimestampsIntervalInSeconds are different. Would you like to continue? Y/n");
         if (Console.ReadLine()!.ToLower().Trim()=="n")
             return false;
         return true;
@@ -100,15 +100,16 @@ class Program
         TimestampHistoryManager thm = new TimestampHistoryManager(appConfig!.PathToHistory+"/history.json");
         if (File.Exists(appConfig!.PathToHistory + "/history.json"))        
             thm.Load();        
-        else 
-            thm.Initialize(appConfig!.FirstTimestamp);       
+       // else 
+           // thm.Initialize(appConfig!.FirstTimestamp);       
         return thm;
     } 
     private static void ReadConfiguration()
     {
         if (!File.Exists("config/appConfig.json"))
         {
-            Console.WriteLine("Configuration File not found");
+            LogManager.Log
+                ("Configuration File not found");
             System.Environment.Exit(1);
         }
         appConfig = JsonSerializer.Deserialize<AppConfiguration>(File.ReadAllText("config/appConfig.json"));

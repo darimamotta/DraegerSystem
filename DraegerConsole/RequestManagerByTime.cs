@@ -54,9 +54,9 @@ namespace DraegerConsole
         {
             BuildJson();
         }            
-        private void BuildJson()
+        private void BuildJson(bool useAdmissionDateTime=false)
         {
-            CreateHospitalProvider();
+            CreateHospitalProvider(useAdmissionDateTime,GetHistoryTimestamp());
             ConverterJson converterJson = new ConverterJson(parameterHistory);
             messageWriter.WriteProcessMessage();            
             PrepareAndProcessJson(converterJson);
@@ -64,6 +64,14 @@ namespace DraegerConsole
             timestampUpdater.UpdateTimestamps();
             messageWriter.WriteOKMessage();            
         }
+
+        private DateTime? GetHistoryTimestamp()
+        {
+            if (historyManager.History!.Units.Count == 0)
+                return null;
+            return historyManager.History.Units[historyManager.History.Units.Count-1].To;
+        }
+
         private void UpdateHistory()
         {
             parameterHistory.RemoveOld(CreateCutoffDateTime());
@@ -109,7 +117,7 @@ namespace DraegerConsole
             if (hospital == null) return new List<PatientJson>();           
             return converterJson.Convert(hospital);
         }
-        private void CreateHospitalProvider()
+        private void CreateHospitalProvider(bool useAdmissionDateTime, DateTime? historyTimestamp)
         {
             hospitalProvider = new DraegerHospitalProvider(
                 appConfig!.Certificate,
@@ -119,17 +127,21 @@ namespace DraegerConsole
                 appConfig.ServerPort,
                 appConfig.DomainId,
                 timestampUpdater.PastTimestamp,
-                timestampUpdater.CurrentTimestamp
+                timestampUpdater.CurrentTimestamp,
+                historyTimestamp,
+                useAdmissionDateTime
             );
         }
         public void StartRequests()
         {
             messageWriter.WriteStartMessage();
-            BuildJson();
+            BuildJson(true);
             SetTimer();
             WaitForStop();
             DestroyTimer();
         }
+
+    
         private void DestroyTimer()
         {
             if (timer != null)

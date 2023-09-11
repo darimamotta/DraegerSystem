@@ -60,7 +60,7 @@ namespace DraegerJson
             //AddListOfProcedures(bundle, pat);
             foreach (Operation op in pat.Procedures)
             {
-               // if (op.Exist)
+                if (op.Exist)
                     AddProcedureToBundle(bundle, pat, op, list);
             }
             bundle.Entry.Insert(0, new Bundle.EntryComponent { Resource = list, FullUrl = "https://srv-orchestra/List/1" });
@@ -80,7 +80,7 @@ namespace DraegerJson
         {
             foreach (Operation op in pat.Procedures)
             {
-                //if (op.Exist)
+                if (op.Exist)
                     list.Entry.Add(
                         new List.EntryComponent
                         {
@@ -133,7 +133,7 @@ namespace DraegerJson
         {
             foreach (Parameter param in op.Params)
             {
-                //if (!history.Contains(param))
+                if (!history.Contains(param))
                 {
                     AddParamToProcedure(param, pat, op, bundle, list);
                     history.Add(param);

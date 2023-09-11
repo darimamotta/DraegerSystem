@@ -8,8 +8,9 @@
   "TimestampsOffsetInSeconds": 0,
   "PathToJsonFiles": "data",
   "PathToHistory": "history",
+  "LogFileName": "log.txt",
   "HistoryTimeInMinutes": 60,
   "FirstTimestamp": "2023-08-05T00:00:00+02:00",
-  "TimestampsIntervalInSeconds": 1800,
-  "RequestsIntervalInSeconds": 60
-}
+  "TimestampsIntervalInSeconds": 6,
+  "RequestsIntervalInSeconds": 6
+}  

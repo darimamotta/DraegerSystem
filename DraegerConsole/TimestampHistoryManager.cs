@@ -21,6 +21,7 @@ namespace DraegerConsole
         public TimestampHistoryManager(string pathToHistory) 
         { 
             this.pathToHistory = pathToHistory;
+            History = new TimestampHistory();
         }
         public void Load()
         {

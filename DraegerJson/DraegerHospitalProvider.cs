@@ -2,6 +2,7 @@
 using Draeger.Pdms.Services.Json;
 using Draeger.Pdms.Services.Json.Entities;
 using Patient = Draeger.Pdms.Services.Json.Entities.Patient;
+using System.IO;
 
 namespace DraegerJson
 {
@@ -10,6 +11,7 @@ namespace DraegerJson
         public string Id;
         public string Name;
         public string Milestone;
+
     }
     public class DraegerHospitalProvider : IHospitalProvider
     {
@@ -21,7 +23,10 @@ namespace DraegerJson
             int serverPort,
             string domainId,
             DateTime fromTimestamp,
-            DateTime toTimestamp
+            DateTime toTimestamp,
+            DateTime? historyTimestamp = null,
+            bool useAdmissionDateTime = false        
+
         )
         {
             this.certificate = certificate;
@@ -32,6 +37,8 @@ namespace DraegerJson
             this.serverPort = serverPort;
             this.fromTimestamp = fromTimestamp;
             this.toTimestamp = toTimestamp;
+            this.historyTimestamp = historyTimestamp;
+            this.useAdmissionDateTime = useAdmissionDateTime;            
         }
         public CLAPPConfiguration CreateConfig()
         {
@@ -54,7 +61,7 @@ namespace DraegerJson
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                LogManager.Log(e.Message);
             }
             return null;
         }
@@ -92,10 +99,14 @@ namespace DraegerJson
             var proc = BuildProcedure(patient, clapp, p);
             if (proc.Exist)
             {
+                
+               
                 BuildPatientId(clapp, p, patient);
                 BuildPatientFullName(clapp, p, patient);
                 BuildPatientOP(clapp, p, patient);
                 BuildPatientAdmissionWardDate(clapp, p, patient);
+
+
                 BuildPatientLocation(clapp, p, patient);
                 BuildTimestampsByProcedure(clapp, p, proc, patient);
             }
@@ -108,10 +119,23 @@ namespace DraegerJson
             var pt = clapp.ParseTemplate(
                 p.CaseID,
                 template,
-                fromTimestamp,
+                GetFromTimestamp(p),
                 toTimestamp
             );
             patient.Id = pt.TextResult;
+        }
+        private DateTime GetFromTimestamp(Patient p)
+        {
+            if (useAdmissionDateTime)
+            {
+                if (historyTimestamp != null && historyTimestamp.Value > p.AdmissionToHospitalDate)
+                {
+                    return historyTimestamp.Value; 
+                }
+               return p.AdmissionToHospitalDate; 
+                
+            }            
+            return fromTimestamp;
         }
         private void BuildPatientOP(CLAPP clapp, Patient p, ArrivalSick patient)
         {
@@ -119,11 +143,12 @@ namespace DraegerJson
             var pt3 = clapp.ParseTemplate(
                 p.CaseID,
                 template,
-                fromTimestamp,
+                GetFromTimestamp(p),
                 toTimestamp
             );
             string opdate = pt3.TextResult.ToString();
-            patient.OPDate = DateTime.Parse(opdate);
+            DateTime newOPdate = DateTime.ParseExact(opdate,"dd.MM.yyyy HH:mm",null);
+            patient.OPDate = DateTime.SpecifyKind(newOPdate,DateTimeKind.Unspecified);
         }
         private void BuildPatientAdmissionWardDate(
             CLAPP clapp, Patient p, ArrivalSick patient
@@ -133,11 +158,13 @@ namespace DraegerJson
             var pt4 = clapp.ParseTemplate(
                 p.CaseID,
                 template,
-                fromTimestamp,
+                GetFromTimestamp(p),
+                //patient.OPDate,
                 toTimestamp
             );
             string opdate = pt4.TextResult.ToString();
-            patient.AdmissionToWardDate = DateTime.Parse(opdate);
+            DateTime newopdate = DateTime.ParseExact(opdate, "dd.MM.yyyy HH:mm", null);
+            patient.AdmissionToWardDate = DateTime.SpecifyKind(newopdate, DateTimeKind.Unspecified);
         }
         private void BuildPatientFullName(CLAPP clapp, Patient p, ArrivalSick patient)
         {
@@ -150,7 +177,8 @@ namespace DraegerJson
             var pt1 = clapp.ParseTemplate(
                 p.CaseID,
                 template,
-                patient.OPDate,
+                //patient.OPDate,
+                GetFromTimestamp(p),
                 toTimestamp
             );
             patient.Location = pt1.TextResult;
@@ -165,11 +193,15 @@ namespace DraegerJson
         {
             foreach (var snomedID in snomedIDs)
             {
+                //var temp = GetFromTimestamp(p);
+                //Console.WriteLine(temp);
+                //Console.WriteLine(p.CaseID);
                 string template = CreateParamsTemplate(snomedID.Id);
                 var pt = clapp.ParseTemplate(
                     p.CaseID,
                     template,
-                    patient.OPDate,
+                    //patient.OPDate,
+                    GetFromTimestamp(p),
                     toTimestamp
                 );
                 BuildParameterFromTemplate(proc, pt, snomedID, patient);
@@ -180,8 +212,8 @@ namespace DraegerJson
             var pt = clapp.ParseTemplate(
                    p.CaseID,
                    CreateProcedureTemplate(),
-                   new DateTime(1990, 1, 1),
-                   DateTime.Now
+                   GetFromTimestamp(p),
+                   toTimestamp
             );
             Operation proc = new Operation();
             proc.Id = pt.TextResult;
@@ -220,6 +252,8 @@ namespace DraegerJson
         private int serverPort;
         private DateTime fromTimestamp;
         private DateTime toTimestamp;
+        private bool useAdmissionDateTime;
+        private DateTime? historyTimestamp;
 
         private static List<SnomedParameter> snomedIDs = new List<SnomedParameter>()
         {
