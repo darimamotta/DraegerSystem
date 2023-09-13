@@ -126,6 +126,8 @@ namespace DraegerConsole
                 appConfig.ServerHostName,
                 appConfig.ServerPort,
                 appConfig.DomainId,
+                Enum.Parse<StoreLocation>(appConfig.StoreLocation),
+                Enum.Parse<StoreName>(appConfig.StoreName),
                 timestampUpdater.PastTimestamp,
                 timestampUpdater.CurrentTimestamp,
                 historyTimestamp,

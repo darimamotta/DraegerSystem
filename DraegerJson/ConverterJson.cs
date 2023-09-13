@@ -80,7 +80,7 @@ namespace DraegerJson
         {
             foreach (Operation op in pat.Procedures)
             {
-                if (op.Exist)
+                //if (op.Exist)
                     list.Entry.Add(
                         new List.EntryComponent
                         {

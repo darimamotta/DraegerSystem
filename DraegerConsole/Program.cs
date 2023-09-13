@@ -12,6 +12,7 @@ using System.Xml.Linq;
 using System.Text.Json;
 using DraegerConsole.Exceptions;
 using System.Runtime.InteropServices;
+using Hl7.Fhir.Specification;
 
 class Program
 {
@@ -27,9 +28,11 @@ class Program
     {       
         try
         {
+            
             ReadConfiguration();
-            //if (!CheckConfigs())
-            //    return 0;
+            if (!CheckConfigs())
+                return 0;
+            
             
             if (args.Length == 0|| args.Length == 2 && (args[0]=="-m" || args[0] == "--mode") && args[1] == "interval")
             {
@@ -64,17 +67,42 @@ class Program
         }
         return 0;      
     }
+       
     public static bool CheckConfigs()
     {
-        if(appConfig!.RequestsIntervalInSeconds == appConfig.TimestampsIntervalInSeconds)
+        return CheckRequestIntervalAndTimestampIntervalEquality()&&
+               CheckStoreNameAndStoreLocationValues();
+    }
+
+    private static bool CheckStoreNameAndStoreLocationValues()
+    {
+        StoreLocation storeLocation;
+        if (!Enum.TryParse(appConfig!.StoreLocation, out storeLocation))
+        {
+            LogManager.Log($"[CONFIG ERROR]: {appConfig!.StoreLocation} is invalid for StoreLocation!");
+            return false;
+        }
+        StoreName storeName;
+        if(!Enum.TryParse(appConfig!.StoreName, out storeName))
+        {
+            LogManager.Log($"[CONFIG ERROR]: {appConfig!.StoreName} is invalid for StoreName!");
+            return false;
+        }
+        return true;
+    }
+
+    private static bool CheckRequestIntervalAndTimestampIntervalEquality()
+    {
+        if (appConfig!.RequestsIntervalInSeconds == appConfig.TimestampsIntervalInSeconds)
         {
             return true;
         }
         LogManager.Log("RequestsIntervalInSeconds and TimestampsIntervalInSeconds are different. Would you like to continue? Y/n");
-        if (Console.ReadLine()!.ToLower().Trim()=="n")
+        if (Console.ReadLine()!.ToLower().Trim() == "n")
             return false;
         return true;
     }
+
     private static ITimestampUpdater? LoadDateTimeArrayFromFile(string filename)
     {
         List<DateTime> dateTimestamps = new List<DateTime>();
