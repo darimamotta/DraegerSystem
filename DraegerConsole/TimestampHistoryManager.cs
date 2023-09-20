@@ -35,7 +35,6 @@ namespace DraegerConsole
                 throw new FileNotFoundException("File of history was not found");
                
             }
-           
         }
         public void Save()
         {
