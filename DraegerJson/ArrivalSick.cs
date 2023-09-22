@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DraegerJson
 {
-    public class ArrivalSick
+    public class ArrivalSick:IArrivalSick
     {
         public string Id { get; set; } = "";
         public string AufnahmeNR { get; set; } = "";
@@ -15,6 +15,10 @@ namespace DraegerJson
         public DateTime OPDate { get; set; } 
         public DateTime AdmissionToWardDate { get; set; }
         public List <Operation> Procedures { get; set; } = new List<Operation>();
+        public ArrivalSickChanges GetDifference(ArrivalSick prototype)
+        {
+            return new ArrivalSickChanges(this, prototype);
+        }
         
     }
 }

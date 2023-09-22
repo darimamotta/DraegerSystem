@@ -6,13 +6,15 @@
   "DomainId": "clappathon",
   "ServerPort": 25000,
   "StoreLocation": "LocalMachine",
-  "StoreName":"My",
+  "StoreName": "My",
   "TimestampsOffsetInSeconds": 0,
+  "UpdateTimeLimitInHours": 24,
   "PathToJsonFiles": "data",
   "PathToHistory": "history",
   "LogFileName": "log.txt",
   "HistoryTimeInMinutes": 60,
   "FirstTimestamp": "2023-08-05T00:00:00+02:00",
-  "TimestampsIntervalInSeconds": 6,
-  "RequestsIntervalInSeconds": 6
-}  
+  "TimestampsIntervalInSeconds": 120,
+  "RequestsIntervalInSeconds": 120
+
+}

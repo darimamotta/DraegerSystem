@@ -1,6 +1,4 @@
-﻿using Draeger.Pdms.Services.Extensions;
-using Draeger.Pdms.Services.Json.Entities;
-using Draeger.Pdms.Services.Json;
+﻿
 using DraegerConsole;
 using DraegerJson;
 using Draft_Draeger;
@@ -31,12 +29,11 @@ class Program
             
             ReadConfiguration();
             if (!CheckConfigs())
-                return 0;
+                return 0;                        
             
-            
-            if (args.Length == 0|| args.Length == 2 && (args[0]=="-m" || args[0] == "--mode") && args[1] == "interval")
+            if (args.Length == 0|| args.Length == 2 && (args[0]=="-m" || args[0] == "--mode") && args[1] == "fo")
             {
-                timestampUpdater = new IntervalTimestampUpdater(appConfig!.TimestampsIntervalInSeconds, appConfig!.FirstTimestamp, DateTime.Now);
+                timestampUpdater= new FixedOffsetTimeStampUpdater(new TimeSpan(appConfig!.UpdateTimeLimitInHours * 2, 0, 0));               
             }
             else if(args.Length==3&& (args[0] == "-m" || args[0] == "--mode") && args[1] == "array")
             {
@@ -46,18 +43,25 @@ class Program
             {
                 timestampUpdater = new NowTimestampUpdater(appConfig!.TimestampsOffsetInSeconds, appConfig.FirstTimestamp);
             }
+            else if (args.Length == 3 && (args[0] == "-m" || args[0] == "--mode") && args[1] == "interval")
+            {
+                timestampUpdater = new IntervalTimestampUpdater(appConfig!.TimestampsIntervalInSeconds, appConfig!.FirstTimestamp, DateTime.Now);
+            }
             else
             {
                 PrintHelp();
                 return 0;
             }
             historyManager = BuildHistoryManager();
-            
+            ConverterJsonWithLimitedUpdateTime cj = new ConverterJsonWithLimitedUpdateTime(
+                    new TimeSpan(appConfig!.UpdateTimeLimitInHours * 2, 0, 0));
+            cj.CanAddOldPatient = true;
             RequestManagerByTime request = new RequestManagerByTime(
                 timestampUpdater!, 
                 historyManager,
                 appConfig!,
-                new PerformedPeriodToPerformedDateTime()
+                new PerformedPeriodToPerformedDateTime(),
+                cj
             );
             request.StartRequests();
         }
@@ -121,8 +125,8 @@ class Program
     }
     private static void PrintHelp()
     {
-        Console.WriteLine("usage: DragerConsole [-h | --help | -m now | --mode now | -m array <file> |\n       --mode array <file> | -m interval | --mode interval]");
-    }
+        Console.WriteLine("usage: DragerConsole [-h | --help | -m now | --mode now | -m array <file> |\n       --mode array <file> | -m interval | --mode interval |\n       --mode array <file> | -m fo | --mode fo]");
+    } 
     private static TimestampHistoryManager BuildHistoryManager()
     {
         TimestampHistoryManager thm = new TimestampHistoryManager(appConfig!.PathToHistory+"/history.json");

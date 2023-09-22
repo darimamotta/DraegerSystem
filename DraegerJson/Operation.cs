@@ -20,5 +20,38 @@ namespace DraegerJson
                 return Id.Length > 0;
             } 
         }
+        public override bool Equals(object? obj)
+        {
+            Operation? op = obj as Operation;
+            if(op == null)
+            {
+                return false;
+            }
+            return ResourceType.Equals(op.ResourceType) &&
+                   Id.Equals(op.Id) &&
+                   Status.Equals(op.Status) &&
+                   ParamsEquals(op);
+        }
+
+        private bool ParamsEquals(Operation op)
+        {
+            if (Params.Count != op.Params.Count) 
+            {
+                return false;
+            }
+            foreach (Parameter param in Params)
+            {
+                if(!op.Params.Contains(param))
+                {
+                    return false;
+                }
+            }
+            foreach(Parameter param in op.Params)
+            {
+                if (!Params.Contains(param))
+                    return false;
+            }
+            return true;
+        }
     }
 }

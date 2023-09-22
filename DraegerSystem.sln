@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DraegerConsole", "DraegerCo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DragerXML", "DragerXML\DragerXML.csproj", "{8534E2A0-BEDA-4DFB-A25F-37BA1D4D59F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DraegerConsoleTests", "DraegerConsoleTests\DraegerConsoleTests.csproj", "{F85C48F0-0C24-43AB-BBF0-DBA244605C72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DraegerConsoleTests", "DraegerConsoleTests\DraegerConsoleTests.csproj", "{F85C48F0-0C24-43AB-BBF0-DBA244605C72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DraegerJsonTests", "DraegerJsonTests\DraegerJsonTests.csproj", "{60805CFC-65E4-4494-A581-20E47F2B5119}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{F85C48F0-0C24-43AB-BBF0-DBA244605C72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F85C48F0-0C24-43AB-BBF0-DBA244605C72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F85C48F0-0C24-43AB-BBF0-DBA244605C72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60805CFC-65E4-4494-A581-20E47F2B5119}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60805CFC-65E4-4494-A581-20E47F2B5119}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60805CFC-65E4-4494-A581-20E47F2B5119}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60805CFC-65E4-4494-A581-20E47F2B5119}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,8 +1,7 @@
 {
   "profiles": {
     "DraegerConsole": {
-      "commandName": "Project",
-      "commandLineArgs": "-m interval"
+      "commandName": "Project"
     }
   }
 }

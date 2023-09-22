@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hl7.Fhir.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,7 +32,7 @@ namespace DraegerJson
             return Id.Equals(other.Id)&&Name.Equals( other.Name)&& Date.Equals(other.Date)&& PatientId.Equals(other.PatientId);
          
         }
-
+     
         public int CompareTo(Parameter? other)
         {
            if(other == null) return -1;

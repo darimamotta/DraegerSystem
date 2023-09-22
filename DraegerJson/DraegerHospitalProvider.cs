@@ -106,7 +106,7 @@ namespace DraegerJson
             clapp.SetPatient(p.CaseID);
             ArrivalSick patient = new ArrivalSick { AufnahmeNR = p.AdmissionNumber };
             var proc = BuildProcedure(patient, clapp, p);
-           // if (proc.Exist)
+            if (proc.Exist)
             {
                               
                 BuildPatientId(clapp, p, patient);

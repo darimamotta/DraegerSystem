@@ -22,6 +22,7 @@ namespace DraegerConsole
         public string StoreLocation { get; set; } = string.Empty;
         public string StoreName { get; set; } = string.Empty;  
         public int TimestampsOffsetInSeconds { get; set; }
+        public int UpdateTimeLimitInHours { get; set; }
         public string PathToJsonFiles { get; set; } = string.Empty;
         public string PathToHistory { get;set; } = string.Empty;
         public string LogFileName { get; set; } = string.Empty;

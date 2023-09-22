@@ -26,12 +26,14 @@ namespace DraegerConsole
         private IJsonModifier modifier;
         private MessageWriter messageWriter;
         private IHospitalProvider? hospitalProvider = null;
+        private IConverterJson converterJson;
 
         public RequestManagerByTime(
             ITimestampUpdater timestampUpdater, 
             TimestampHistoryManager historyManager,
             AppConfiguration appConfig,
-            IJsonModifier modifier
+            IJsonModifier modifier,
+            IConverterJson converterJson
         )
         {
             this.appConfig = appConfig;
@@ -40,6 +42,7 @@ namespace DraegerConsole
             this.parameterHistory = new DraegerJson.ParameterHistory();
             this.modifier = modifier;
             this.messageWriter = new MessageWriter(timestampUpdater);
+            this.converterJson = converterJson;
         }
         private void SetTimer()
         {
@@ -56,10 +59,9 @@ namespace DraegerConsole
         }            
         private void BuildJson(bool useAdmissionDateTime=false)
         {
-            CreateHospitalProvider(useAdmissionDateTime,GetHistoryTimestamp());
-            ConverterJson converterJson = new ConverterJson(parameterHistory);
+            CreateHospitalProvider(useAdmissionDateTime,GetHistoryTimestamp());            
             messageWriter.WriteProcessMessage();            
-            PrepareAndProcessJson(converterJson);
+            PrepareAndProcessJson();
             UpdateHistory();
             timestampUpdater.UpdateTimestamps();
             messageWriter.WriteOKMessage();            
@@ -90,9 +92,9 @@ namespace DraegerConsole
                 -appConfig!.HistoryTimeInMinutes
             );
         }
-        private void PrepareAndProcessJson(ConverterJson converterJson)
+        private void PrepareAndProcessJson()
         {
-            foreach (var pj in CreateJsons(converterJson))
+            foreach (var pj in CreateJsons())
             {
                 IJsonProcessor jsonProcessor = CreateJsonProcessor(pj);                
                 jsonProcessor.ProcessJson(modifier.Modify(pj.Json));
@@ -111,7 +113,7 @@ namespace DraegerConsole
                 ".json"
             );
         }
-        private List<PatientJson> CreateJsons(ConverterJson converterJson)
+        private List<PatientJson> CreateJsons()
         {
             Hospital? hospital = hospitalProvider!.GetHospital();
             if (hospital == null) return new List<PatientJson>();           
@@ -142,8 +144,7 @@ namespace DraegerConsole
             WaitForStop();
             DestroyTimer();
         }
-
-    
+            
         private void DestroyTimer()
         {
             if (timer != null)

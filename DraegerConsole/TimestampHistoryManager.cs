@@ -16,7 +16,7 @@ namespace DraegerConsole
         {
             get; private set;
         }
-       
+              
         
         public TimestampHistoryManager(string pathToHistory) 
         { 
@@ -32,9 +32,9 @@ namespace DraegerConsole
             }
             else 
             {
-                throw new FileNotFoundException("File of history was not found");
+                throw new FileNotFoundException("File of history was not found");               
                
-            }
+            }           
         }
         public void Save()
         {
@@ -48,7 +48,7 @@ namespace DraegerConsole
                 Directory.CreateDirectory(dirName); 
             }
             File.WriteAllText(pathToHistory, JsonSerializer.Serialize(History));
-        }
+        }        
         public void Initialize()
         {
             History = new TimestampHistory();
