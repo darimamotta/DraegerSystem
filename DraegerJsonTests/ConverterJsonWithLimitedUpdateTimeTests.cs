@@ -328,7 +328,7 @@ namespace DraegerJsonTests
             Assert.That(result.Find(pj => pj.PatientId == as2.Id), Is.Not.Null);
         }
         [Test]
-        public void Convert_OnePatientTimeoutButFlagIsSet_CountEqualsOne()
+        public void Convert_OnePatientTimeoutButFlagIsSet_CountEqualsTwo()
         {
             ConverterJsonWithLimitedUpdateTime converter =
                 new ConverterJsonWithLimitedUpdateTime(new TimeSpan(24, 0, 0));

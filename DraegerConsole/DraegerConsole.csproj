@@ -18,13 +18,12 @@
             </CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
-	<ItemGroup>
-		<Content Include="data">
-			<CopyToOutputDirectory>
-				Always
-			</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>
+
+ 	<ItemGroup>
+ 	  <Compile Remove="history\**" />
+ 	  <EmbeddedResource Remove="history\**" />
+ 	  <None Remove="history\**" />
+ 	</ItemGroup>
 	<ItemGroup>
 	  <PackageReference Include="Draeger.Pdms.Services.Extensions" Version="1.0.1" />
 	  <PackageReference Include="Draeger.Pdms.Services.Json" Version="5.0.1" />
@@ -38,8 +37,5 @@
 	  <None Update="dateTimes.txt">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="history\" />
 	</ItemGroup>
 </Project>
